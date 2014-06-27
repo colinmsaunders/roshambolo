@@ -42,6 +42,10 @@ def cgimain(args) :
         print 'Content-type: text/plain\n\n%s' % x
         sys.exit()
 
+    if 'ping' == c :
+        print 'Content-type: text/plain\n\npong'
+        sys.exit()
+
     if 'log' == c :
         g_id = args.get('g_id')[0]
         print 'Content-type: text/plain\n\n%s' % log(g_id)
@@ -60,7 +64,7 @@ def cgimain(args) :
 if __name__ == '__main__' :
 
     if os.environ.has_key('HTTP_HOST') :
-        args = cgi.FieldStorage()
+        args = cgi.parse_qs(os.environ.get('QUERY_STRING',''))
         cgimain(args)
 
     else :
