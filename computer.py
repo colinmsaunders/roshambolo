@@ -1,20 +1,20 @@
 # computer.py -- sample liar's dice robot
 
-import random,logging
+import random
+import logging
 
-def get_play(me,hands,history) :
-    
+def get_play(me, hands, history):
     # figure out the previous call
     #
-    if 0 == len(history) :
-        prev_quantity,prev_face = 0,0
-    else :
+    if 0 == len(history):
+        prev_quantity, prev_face = 0, 0
+    else:
         x = int(history.split(',')[-1].split(':')[1])
-        prev_quantity,prev_face = x // 10,x % 10
+        prev_quantity, prev_face = x // 10, x % 10
 
     # showdown? if so, just ignore
     #
-    if 0 == prev_quantity :
+    if 0 == prev_quantity and len(history) > 0:
         return 0
     
     # count the total number of dice
@@ -24,17 +24,21 @@ def get_play(me,hands,history) :
     # find my hand
     #
     my_hand = None
-    for i in hands.split(',') :
-        who,dice = i.split(':')
-        if who == me :
+    for i in hands.split(','):
+        who, dice = i.split(':')
+
+        if who == me:
             my_hand = dice
+            if len(history) == 0:
+                return '1' + my_hand[0]
+
             break
 
     # try 4 times to find pick
     # a random better play, if
     # can't, just call
     #
-    for i in range(4) :
+    for i in range(4):
 
         # pick a random face from my dice
         #
