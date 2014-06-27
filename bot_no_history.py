@@ -1,49 +1,42 @@
-# robot.py -- sample liar's dice robot
-
-# See README.md for instructions on how to
-# write a robot, or look at computer.py for
-# an example.
-
-
 def get_play(me, hands, history):
     # 'A:16631,B:xxxxx'
     counts = {}
     opponent_max = 0
-    max_card = 0
+    max_die = 0
     max_count = 0
-    highest_card = 0
+    highest_die = 0
     my_max = None
-    players = hands.split(',')
+    hands = hands.split(',')
 
-    for player in players:
-        pname, cards = player.split(':')
+    for hand in hands:
+        player, dice = hand.split(':')
 
-        if pname == me:
-            for card in cards:
-                card = int(card)
+        if player == me:
+            for die in dice:
+                die = int(die)
 
-                if card in counts:
-                    counts[card] += 1
+                if die in counts:
+                    counts[die] += 1
                 else:
-                    counts[card] = 1
+                    counts[die] = 1
 
-            my_max = len(cards)
+            my_max = len(dice)
         else:
-            opponent_max = len(cards)
+            opponent_max = len(dice)
 
-    for card, count in counts.iteritems():
-        if card > highest_card:
-            highest_card = card
+    for die, count in counts.iteritems():
+        if die > highest_die:
+            highest_die = die
 
         if count > max_count:
             max_count = count
-            max_card = card
+            max_die = die
 
     if max_count < 2:
-        max_card = highest_card
+        max_die = highest_die
         if my_max == 1 and opponent_max == 1:
             max_count = 1
         else:
             max_count = 2
 
-    return '%s%s' % (max_count, max_card)
+    return '%s%s' % (max_count, max_die)
