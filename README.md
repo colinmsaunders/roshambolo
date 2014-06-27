@@ -64,6 +64,18 @@ robot against the computer 100 times:
 
     % python main.py tournament 100 robot computer
 
+## Existing Robots
+
+For your convenience there are a few simple bot implementations
+you may compete against and learn from:
+
+- computer
+- players.p_caller
+- players.p_random
+- players.p_bumper
+- players.p_simpleton
+- players.p_conservative
+
 Have fun!
 
 colinmsaunders@gmail.com

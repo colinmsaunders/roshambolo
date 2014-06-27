@@ -9,35 +9,43 @@ usage:
 
         $ python main.py play human computer
 
-    To play 10 games between get_play() in my_robot.py, get_play in 
+    To play 10 games between get_play() in my_robot.py, get_play in
     his_robot.py, and dummy() in robots.py:
-    
-        $ python main.py tournament 10 my_robot.get_play his_robot.get_play robots.dummy
 
+        $ python main.py tournament 10 my_robot.get_play his_robot.get_play robots.dummy
 '''
 
-import sys,logging,random,time
+import sys
+import logging
+import random
+import time
 
 import liarsdice
+import zipimport
 
 # ignore SIG_PIPE
-# 
-from signal import signal, SIGPIPE, SIG_DFL 
-signal(SIGPIPE,SIG_DFL) 
+from signal import (signal,
+                    SIGPIPE,
+                    SIG_DFL)
 
-def make_player(s,catch_exceptions) :
+signal(SIGPIPE, SIG_DFL)
+
+
+def make_player(s, catch_exceptions):
     filename = s
     attr = 'get_play'
-    if -1 != s.find('.') :
-        filename,attr = s.split('.')
-    try :
+
+    if -1 != s.find('.'):
+        filename, attr = s.split('.')
+    try:
         m = __import__(filename)
-    except :
-        if not catch_exceptions :
+    except:
+        if not catch_exceptions:
             raise
         logging.warn('couldn\'t import "%s"' % filename)
         return None
-    f = getattr(m,attr)
+
+    f = getattr(m, attr)
     return f
 
 def play_games(n,seed,player_names,catch_exceptions) :
