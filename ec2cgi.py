@@ -17,6 +17,12 @@ def tournament(games,players) :
     os.system('/usr/bin/python %s/main.py tournament %d %s > %s/log_%s.txt &' % (ROOT,int(games),' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),ROOT,g_id))
     return g_id
 
+def game(players) :
+    g_id = time.strftime('%Y-%m-%d-%H-%M-%S')
+    os.system('/usr/bin/python %s/main.py tournament %d %s > %s/log_%s.txt' % (ROOT,1,' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),ROOT,g_id))
+    output = file('%s/log_%s.txt' % (ROOT,g_id)).read()
+    return output
+
 def log(g_id) :
     g_id = re.sub('[^a-z0-9_-]','',g_id)
     s = file('%s/log_%s.txt' % (ROOT,g_id)).read()
@@ -42,6 +48,11 @@ def cgimain(args) :
         print 'Content-type: text/plain\n\n%s' % x
         sys.exit()
 
+    if 'game' == c :
+        players = args.get('players')[0].split(',')
+        output = game(players)
+        print 'Content-type: text/plain\n\n%s' % output
+ 
     if 'ping' == c :
         print 'Content-type: text/plain\n\npong'
         sys.exit()
