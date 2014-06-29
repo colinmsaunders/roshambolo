@@ -42,7 +42,8 @@ def make_player(s, catch_exceptions):
     except:
         if not catch_exceptions:
             raise
-        logging.warn('couldn\'t import "%s"' % filename)
+        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],filename))
+ 
         return None
 
     f = getattr(m, attr)
@@ -103,7 +104,7 @@ def main(argv) :
         n = int(sys.argv[2])
         player_names = sys.argv[3:]
         seed = ''.join(sys.argv)
-        play_games(n,seed,player_names,False)
+        play_games(n,seed,player_names,True)
     
     else :
         logging.error('i don\'t know how to "%s". look at the source' % c)
