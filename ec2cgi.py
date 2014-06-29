@@ -3,6 +3,7 @@
 import os,cgi,sys,hashlib,re,time,cgi
 
 ROOT = '/opt/liarsdice/liarsdice'
+LOGS = '/logs'
 
 def register(name,source) :
     sha = hashlib.sha1(source).hexdigest()
@@ -14,28 +15,26 @@ def register(name,source) :
 
 def tournament(games,players) :
     g_id = time.strftime('%Y-%m-%d-%H-%M-%S')
-    os.system('/opt/liarsdice/liarsdiceenv/bin/python %s/main.py tournament %d %s > %s/log_%s.txt &' % (ROOT,int(games),' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),ROOT,g_id))
+    os.system('/opt/liarsdice/liarsdiceenv/bin/python %s/main.py tournament %d %s > %s/log_%s.txt &' % (ROOT,int(games),' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),LOGS,g_id))
     return g_id
 
 def game(players) :
     g_id = time.strftime('%Y-%m-%d-%H-%M-%S')
-    os.system('/opt/liarsdice/liarsdiceenv/bin/python %s/main.py tournament %d %s > %s/log_%s.txt' % (ROOT,1,' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),ROOT,g_id))
-    output = file('%s/log_%s.txt' % (ROOT,g_id)).read()
+    os.system('/opt/liarsdice/liarsdiceenv/bin/python %s/main.py tournament %d %s > %s/log_%s.txt' % (ROOT,1,' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),LOGS,g_id))
+    output = file('%s/log_%s.txt' % (LOGS,g_id)).read()
     return output
 
 def log(g_id) :
     g_id = re.sub('[^a-z0-9_-]','',g_id)
-    s = file('%s/log_%s.txt' % (ROOT,g_id)).read()
-    return s
+    for i in file('%s/log_%s.txt' % (LOGS,g_id)).readlines() :
+        yield i
 
 def scores(g_id) :
     g_id = re.sub('[^a-z0-9_-]','',g_id)
-    a = []
-    for i in file('%s/log_%s.txt' % (ROOT,g_id)).readlines() :
+    for i in file('%s/log_%s.txt' % (LOGS,g_id)).readlines() :
         if -1 == i.find('SCORE') :
             continue
-        a.append(i)
-    return ''.join(a)
+        yield i
 
 def cgimain(args) :
 
@@ -59,14 +58,18 @@ def cgimain(args) :
 
     if 'log' == c :
         g_id = args.get('g_id')[0]
-        print 'Content-type: text/plain\n\n%s' % log(g_id)
- 
+        print 'Content-type: text/plain\n\n'
+        for i in log(g_id) :
+            sys.stdout.write(i)
+
     if 'scores' == c :
         g_id = args.get('g_id')[0]
-        print 'Content-type: text/plain\n\n%s' % scores(g_id)
+        print 'Content-type: text/plain\n\n'
+        for i in scores(g_id) :
+            sys.stdout.write(i)
 
     if 'tournament' == c :
-        n = int(args.get('n')[0])
+        n = min(10000,int(args.get('n')[0]))
         players = args.get('players')[0].split(',')
         g_id = tournament(n,players)
         print 'Content-type: text/plain\n\n%s' % g_id
