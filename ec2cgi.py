@@ -16,6 +16,8 @@ def register(name,source) :
 def tournament(games,players) :
     g_id = time.strftime('%Y-%m-%d-%H-%M-%S')
     os.system('/opt/liarsdice/liarsdiceenv/bin/python %s/main.py tournament %d %s > %s/log_%s.txt &' % (ROOT,int(games),' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players)),LOGS,g_id))
+
+    # os.system('python %s/director.py tournament %d %s/log_%s.txt %s &' % (ROOT,int(games),LOGS,g_id,' '.join(map(lambda x : re.sub('[^a-z0-9_]','',x),players))))
     return g_id
 
 def game(players) :
