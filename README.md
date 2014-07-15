@@ -65,11 +65,6 @@ robot against the computer 100 times:
 
     % python main.py tournament 100 p_robot p_computer
 
-## Existing Robots
-
-For your convenience there are a few simple bot implementations
-you may compete against and learn from:
-
 Have fun!
 
 colinmsaunders@gmail.com
