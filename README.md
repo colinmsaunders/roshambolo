@@ -20,7 +20,8 @@ remains.
 
 In this variation there are no wild dice, and no re-casting of dice.
 
-You can write a robot by implementing the function in robot.py:
+You can write a robot by implementing the get\_play() function in 
+p\_robot/player.py:
 
     def get_play(me,hands,history) 
 
@@ -55,26 +56,19 @@ will be a call) so you can observe the showdown.
 
 For a quick start to play against the computer:
 
-    % git clone git://github.com/colinmsaunders/liarsdice.git
-    % cd liarsdice
-    % python main.py play human computer
+    % git clone git://github.com/botfights/game-liarsdice.git
+    % cd game-liarsdice
+    % python main.py play p_human p_computer
 
-Next, edit robot.py, implement get\_play(), then play your
+Next, edit p\_robot.py, implement get\_play(), then play your
 robot against the computer 100 times:
 
-    % python main.py tournament 100 robot computer
+    % python main.py tournament 100 p_robot p_computer
 
 ## Existing Robots
 
 For your convenience there are a few simple bot implementations
 you may compete against and learn from:
-
-- computer
-- players.p_caller
-- players.p_random
-- players.p_bumper
-- players.p_simpleton
-- players.p_conservative
 
 Have fun!
 
