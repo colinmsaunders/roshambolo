@@ -7,12 +7,11 @@ usage:
 
     To play a game against the computer:
 
-        $ python main.py play human computer
+        $ python main.py play p_human p_computer
 
-    To play 10 games between get_play() in my_robot.py, get_play in
-    his_robot.py, and dummy() in robots.py:
+    To play a 10 game tourney between p_robot and p_computer and p_dummy: 
 
-        $ python main.py tournament 10 my_robot.get_play his_robot.get_play robots.dummy
+        $ python main.py tournament 10 p_robot p_human p_dummy
 '''
 
 import sys
@@ -21,7 +20,6 @@ import random
 import time
 
 import liarsdice
-import zipimport
 
 # ignore SIG_PIPE
 from signal import (signal,
@@ -31,22 +29,18 @@ from signal import (signal,
 signal(SIGPIPE, SIG_DFL)
 
 
-def make_player(s, catch_exceptions):
-    filename = s
-    attr = 'get_play'
-
-    if -1 != s.find('.'):
-        filename, attr = s.split('.')
+def make_player(path, catch_exceptions):
+    name = '%s.player' % path
     try:
-        m = __import__(filename)
+        m = __import__(name)
     except:
         if not catch_exceptions:
             raise
-        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],filename))
+        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],name))
  
         return None
 
-    f = getattr(m, attr)
+    f = getattr(getattr(m, 'player'),'get_play')
     return f
 
 def play_games(n,seed,player_names,catch_exceptions) :
