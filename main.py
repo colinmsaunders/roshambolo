@@ -70,6 +70,7 @@ def play_games(n,seed,player_names,catch_exceptions) :
             rank += 1
             logging.info('SCORE\tgame %d of %d\t#%d.\t%s\t%s\t%d' % (game_num,n,rank,i,names[i],scores[i]))
         logging.info('SCORE')
+        logging.info('STATUS\t%.2f\t\t%s' % (game_num/float(n),','.join(map(lambda i : '%s:%s' % (names[i],scores[i]),k))))
     return scores
 
 def main(argv) :
