@@ -30,31 +30,46 @@ from signal import (signal,
 signal(SIGPIPE, SIG_DFL)
 
 
-def make_player(path, name, catch_exceptions):
+def split_playername(playername):
+    parts = playername.split(':')
+    if 1 == len(parts):
+        return (parts[0],parts[0],'player','get_play')
+    if 2 == len(parts):
+        return (parts[0],parts[1],'player','get_play')
+    if 3 == len(parts):
+        return (parts[0],parts[1],parts[2],'get_play')
+    if 4 == len(parts):
+        return (parts[0],parts[1],parts[2],parts[3])
+    raise Exception('i don\'t know how to parse "%s"' % playername)
+
+
+def make_player(playername, path, modulename, attr, catch_exceptions):
     try:
-        fp, pathname, description = imp.find_module(name, [path,])
-        m = imp.load_module(name, fp, pathname, description)
+        fp, pathname, description = imp.find_module(modulename, [path,])
+        m = imp.load_module(modulename, fp, pathname, description)
     except:
         if not catch_exceptions:
             raise
-        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],name))
+        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],playername))
  
         return None
-    f = getattr(m, 'get_play')
+    f = getattr(m, attr)
     return f
 
-def play_games(n,seed,player_names,catch_exceptions) :
+
+def play_games(n,seed,playernames,catch_exceptions) :
     random.seed(seed)
     logging.debug('SEED\t%s' % seed)
     players = {}
     scores = {}
     names = {}
-    for i in player_names :
+    for i in playernames :
+        playername, path, modulename, attr = split_playername(i)
+        logging.info('playername: %s => %s' % (i,split_playername(i)))
         player_id = chr(ord('A') + len(players))
-        names[player_id] = i
-        logging.info('making player %s (%s) ...' % (player_id,i))
-        path,name = i.split('.')
-        p = make_player(path,name,catch_exceptions)
+        names[player_id] = playername
+        logging.info('making player %s (%s) ...' % (player_id,playername))
+        p = make_player(playername, path, modulename, attr, catch_exceptions)
         players[player_id] = p
         scores[player_id] = 0
     game_num = 0
