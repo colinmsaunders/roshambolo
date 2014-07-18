@@ -15,6 +15,7 @@ usage:
 '''
 
 import sys
+import imp
 import logging
 import random
 import time
@@ -29,18 +30,17 @@ from signal import (signal,
 signal(SIGPIPE, SIG_DFL)
 
 
-def make_player(path, catch_exceptions):
-    name = '%s.player' % path
+def make_player(path, name, catch_exceptions):
     try:
-        m = __import__(name)
+        fp, pathname, description = imp.find_module(name, [path,])
+        m = imp.load_module(name, fp, pathname, description)
     except:
         if not catch_exceptions:
             raise
         logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],name))
  
         return None
-
-    f = getattr(getattr(m, 'player'),'get_play')
+    f = getattr(m, 'get_play')
     return f
 
 def play_games(n,seed,player_names,catch_exceptions) :
@@ -53,7 +53,8 @@ def play_games(n,seed,player_names,catch_exceptions) :
         player_id = chr(ord('A') + len(players))
         names[player_id] = i
         logging.info('making player %s (%s) ...' % (player_id,i))
-        p = make_player(i,catch_exceptions)
+        path,name = i.split('.')
+        p = make_player(path,name,catch_exceptions)
         players[player_id] = p
         scores[player_id] = 0
     game_num = 0
