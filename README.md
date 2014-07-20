@@ -60,7 +60,7 @@ For a quick start to play against the computer:
     % cd game-liarsdice
     % python main.py play p_human p_computer
 
-Next, edit p\_robot.py, implement get\_play(), then play your
+Next, edit p\_robot/player.py, implement get\_play(), then play your
 robot against the computer 100 times:
 
     % python main.py tournament 100 p_robot p_computer
