@@ -56,17 +56,15 @@ will be a call) so you can observe the showdown.
 
 For a quick start to play against the computer:
 
-    % git clone git://github.com/botfights/game-liarsdice.git
-    % cd game-liarsdice
-    % python main.py play p_human p_computer
+    $ git clone https://github.com/botfights/liarsdice.git
+    $ cd liarsdice
+    $ python main.py play p_human p_computer
 
 Next, edit p\_robot/player.py, implement get\_play(), then play your
 robot against the computer 100 times:
 
-    % python main.py tournament 100 p_robot p_computer
+    $ python main.py tournament 100 p_robot p_computer
 
 Have fun!
-
-colinmsaunders@gmail.com
 
 [1]: http://en.wikipedia.org/wiki/Liar's_dice
