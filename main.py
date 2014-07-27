@@ -42,17 +42,29 @@ def split_playername(playername):
         return (parts[0],parts[1],parts[2],parts[3])
     raise Exception('i don\'t know how to parse "%s"' % playername)
 
-
 def make_player(playername, path, modulename, attr, catch_exceptions):
+    fp = pathname = description = m = None
     try:
         fp, pathname, description = imp.find_module(modulename, [path,])
-        m = imp.load_module(modulename, fp, pathname, description)
+    except:
+        if not catch_exceptions:
+            raise
+        logging.warn('caught exception "%s" finding module %s' % (sys.exc_info()[1],modulename))
+ 
+    try:
+        if fp:
+            m = imp.load_module(playername, fp, pathname, description)
     except:
         if not catch_exceptions:
             raise
         logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],playername))
- 
+    finally:
+        if fp:
+            fp.close()
+
+    if None == m :
         return None
+
     f = getattr(m, attr)
     return f
 
