@@ -1,194 +1,172 @@
-# roshambono.py
+#!/usr/bin/python
 
-def get_play(game_id,hand_num,who,f_get_play,player_name,hands_str,history_str,catch_exceptions) :
+# roshambono.py -- console harness
+
+HELP = '''\
+usage:
+
+    To play a game to 1000 between p_rock and p_random:
+
+        $ python roshambono.py play 1000 p_rock p_random
+
+    To play a round robin tourney for 100 games to 1000 between p_rock and p_paper and p_random: 
+
+        $ python roshambono.py tourney 100 1000 p_rock p_paper p_random
+'''
+
+import sys
+import imp
+import logging
+import random
+import time
+
+# ignore SIG_PIPE
+from signal import (signal,SIGPIPE,SIG_DFL)
+
+signal(SIGPIPE, SIG_DFL)
+
+
+ROCK        = 1
+PAPER       = 2
+SCISSORS    = 3
+
+BEATS       = [0,3,1,2]
+BEAT_BY     = [0,2,3,1]
+
+def get_play(f_get_play,state,catch_exceptions) :
     play = 0
     try :
-        play = int(f_get_play(who,hands_str,history_str))
+        play = int(f_get_play(state))
     except KeyboardInterrupt :
         raise
     except :
         if not catch_exceptions :
             raise
-        logging.warn('caught exception "%s" calling %s (%s) \'s get_play() function' % (sys.exc_info()[1],who,player_name))
-    logging.debug('LOG_PLAY\tG%sH%d\t%s-%s\t%s\t%s\t%d' % (game_id,hand_num,who,player_name,hands_str,history_str,play))
+        logging.warn('caught exception "%s" calling %s \'s get_play() function' % (sys.exc_info()[1],str(f_get_play)))
+    if play < 1 or play > 3 :
+        play = random.randint(1,3)
+    logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state,play,str(f_get_play)))
     return play
 
-def play_game(game_id,players,player_names,catch_exceptions) :
-    
-    # first, set up the players left in the game
-    #
-    seats = players.keys()
-    seats.sort()
-    random.shuffle(seats)
-    whose_move = 0
-    cups = {}
-    dice = RULES_DICE
-    faces = RULES_FACES
-    for i in seats :
-        cups[i] = dice
-
-    logging.info('=' * 50)
-    logging.info('new game between %s' % ', '.join(map(lambda x : '%s-%s' % (x,player_names[x]),seats)))
-
-    # keep playing hands until only one player left
-    #
-    hand_num = 0
-    while 1 :
-        hand_num += 1
-
-        # only one player left?
-        #
-        winner = None
-        for i in seats :
-            if 0 != cups[i] :
-                if None != winner :
-                    winner = None
-                    break
-                winner = i
-        if None != winner :
-            break
-
-        # everyone rolls their dice
-        #
-        logging.info('-' * 50)
-        logging.info('new hand between %s with %s dice, respectfully' % (', '.join(map(lambda x : '%s-%s' % (x,player_names[x]),filter(lambda x : 0 != cups[x],seats))),', '.join(map(lambda x : '%d' % cups[x],filter(lambda x : 0 != cups[x],seats)))))
-        hands = {}
-        for i in seats :
-            if 0 == cups[i] :
-                continue
-            hands[i] = []
-            logging.debug('rolling %d dice for %s ...' % (cups[i],i))
-            for j in range(cups[i]) :
-                hands[i].append(random.randint(1,faces))
-            hands[i].sort(reverse=True)
-
-        logging.debug('hands: %s' % str(filter(lambda x : 0 != cups[x[0]],hands.items())))
-        
-        # keep playing hands until someone calls liar
-        #
-        history = []
-        while 1 :
-            
-            logging.debug('getting move from %s ...' % seats[whose_move])
-
-            # build history
-            #
-            history_str = ','.join(map(lambda x : '%s:%d' % (seats[x[0]],x[1]),history))
-
-            # build hands
-            #
-            hands_str = None
-            for i in seats :
-                if None == hands_str :
-                    hands_str = ''
-                else :
-                    hands_str += ','
-                if i == seats[whose_move] :
-                    hands_str += '%s:%s' % (seats[whose_move],''.join(map(lambda x : str(x),hands[seats[whose_move]])))
-                else :
-                    hands_str += '%s:%s' % (i,'x' * cups[i])
-
-            # get the play
-            #
-            play = get_play(game_id,hand_num,seats[whose_move],players[seats[whose_move]],player_names[seats[whose_move]],hands_str,history_str,catch_exceptions)
-            logging.info('player %s calls "%s"' % (seats[whose_move],verbose_play(play)))
-
-            # check for legal moves
-            # 
-            if 0 != play :
-                face = play % 10
-                quantity = play // 10
-                if face <= 0 or face > faces or quantity <= 0 or quantity > (len(players) * dice) :
-                    logging.info('illegal move, assuming calling liar')
-                    play = 0
-                elif 0 != len(history) :
-                    last_play = history[-1][1]
-                    last_face = last_play % 10
-                    last_quantity = last_play // 10
-                    if (quantity < last_quantity) or ((quantity == last_quantity) and (face <= last_face)) :
-                        logging.info('not increasing play, assuming calling liar')
-                        play = 0
-
-            # remember the play
-            #
-            history.append((whose_move,play))
-            
-            # if it's a call, or an illegal move, or a bet less than the last play
-            # treat it as a call and check the bluff
-            #
-            loser = None
-            result = None
-            if 0 == play :
-                
-                # if it's the first play, they lose
-                #
-                if 1 == len(history) :
-                    logging.debug('called liar before any plays')
-                    loser = seats[whose_move]
-                    result = 1
-
-                else :
-                    
-                    # count dice
-                    #
-                    common_dice = {}
-                    for i in seats :
-                        if 0 == cups[i] :
-                            continue
-                        for j in hands[i] :
-                            common_dice[j] = common_dice.get(j,0) + 1
- 
-                    last_play = history[-2][1]
-                    last_face = last_play % 10
-                    last_quantity = last_play // 10
- 
-                    logging.debug('hands: %s' % str(hands))
-                    logging.debug('common dice: %s' % str(common_dice))
-
-                    logging.info('player %s-%s calls liar on player %s-%s\'s call of %s' % (seats[whose_move],player_names[seats[whose_move]],seats[history[-2][0]],player_names[seats[history[-2][0]]],verbose_play(last_play)))
-                    logging.info('hands: %s' % ', '.join(map(lambda x : '%s:%s' % (x,''.join(map(lambda y : str(y),hands[x]))),filter(lambda x : 0 != cups[x],seats))))
-                    logging.info('common dice: %s' % ', '.join(map(lambda x : verbose_play((x[1] * 10) + x[0]),common_dice.items())))
-
-                    if common_dice.get(last_face,0) >= last_quantity :
-                        logging.debug('%s\'s last play was %d %d\'s, CORRECT, %s loses' % (seats[history[-2][0]],last_quantity,last_face,seats[whose_move]))
-                        loser = seats[whose_move]
-                        result = 2
+def play_game(games,f_get_play_a,f_get_play_b,catch_exceptions) :
+    wins = [0,0]
+    plays = [[-1,0,0,0],[-1,0,0,0]]
+    last_a = last_b = 0
+    for i in range(games) :
+        a_play = get_play(f_get_play_a,last_a,catch_exceptions)
+        b_play = get_play(f_get_play_b,last_b,catch_exceptions)
+        ties = 0
+        if a_play == b_play :
+            ties += 1
+            x = plays[0][a_play] - plays[1][b_play]
+            if 0 == x :
+                ties += 1
+                x = plays[0][BEATS[a_play]] - plays[1][BEATS[b_play]]
+                if 0 == x :
+                    ties += 1
+                    x = plays[0][BEAT_BY[a_play]] - plays[1][BEAT_BY[b_play]]
+                    if 0 == x :
+                        ties += 1
+                        a_won = random.randint(0,1)
+                    elif 0 > x :
+                        a_won = 0
                     else :
-                        logging.debug('%s\'s last play was %d %d\'s, INCORRECT, %s loses' % (seats[history[-2][0]],last_quantity,last_face,seats[history[-2][0]]))
-                        loser = seats[history[-2][0]]
-                        result = 3
+                        a_won = 1
+                    pass
+                elif 0 > x :
+                    a_won = 0
+                else :
+                    a_won = 1
+            elif 0 > x :
+                a_won = 0
+            else :
+                a_won = 1
 
-                # remove loser's die, bump them if they're out of dice,
-                # and start over again
-                #
-                # show everyone the result
-                #
-                logging.debug('showing everyone the result')
-                history_str = ','.join(map(lambda x : '%s:%d' % (seats[x[0]],x[1]),history))
-                hands_str = ','.join(map(lambda x : '%s:%s' % (x,''.join(map(lambda y : str(y),hands[x]))),filter(lambda x : 0 != cups[x],seats)))
-                logging.debug('LOG_HAND\tG%sH%d\t%s\t%s\tLOSER:%s-%s\t%d' % (game_id,hand_num,hands_str,history_str,loser,player_names[loser],result))
-                logging.info('player %s-%s loses one die' % (loser,player_names[loser]))
-                cups[loser] -= 1
-                if 0 == cups[loser] :
-                    logging.info('player %s-%s has no dice left' % (loser,player_names[loser]))
-                for i in seats :
-                    get_play(game_id,hand_num,i,players[i],player_names[i],hands_str,history_str,catch_exceptions)
-              
-            # advance next move
-            #
-            while 1 :
-                whose_move += 1
-                if whose_move == len(seats) :
-                    whose_move = 0
-                if 0 != cups[seats[whose_move]] :
-                    break
+        else :
+            a_won = 1
+            if BEATS[b_play] == a_play :
+                a_won = 0
+        plays[0][a_play] += 1
+        plays[1][b_play] += 1
+        last_a = a_play | (b_play << 2) | (ties << 4) | (a_won << 7)
+        last_b = b_play | (a_play << 2) | (ties << 4) | ((1 - a_won) << 7)
+        if a_won :
+            wins[0] += 1
+        else :
+            wins[1] += 1
+        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d' % (wins[0],wins[1],a_play,b_play,a_won))
+    return wins
 
-            # new hand if necessary
-            #
-            if None != loser :
-                break
+def split_playername(playername) :
+    parts = playername.split(':')
+    if 1 == len(parts) :
+        return (parts[0],parts[0],'player','get_play')
+    if 2 == len(parts) :
+        return (parts[0],parts[1],'player','get_play')
+    if 3 == len(parts) :
+        return (parts[0],parts[1],parts[2],'get_play')
+    if 4 == len(parts) :
+        return (parts[0],parts[1],parts[2],parts[3])
+    raise Exception('i don\'t know how to parse "%s"' % playername)
 
-    logging.debug('LOG_GAME\t%s\t%s' % (game_id,winner))
-    logging.info('player %s-%s wins' % (winner,player_names[winner]))
-    return winner
+def make_player(playername,catch_exceptions) :
+    name,path,modulename,attr = split_playername(playername)
+    fp = pathname = description = m = None
+    try :
+        fp,pathname,description = imp.find_module(modulename,[path,])
+    except :
+        if not catch_exceptions:
+            raise
+        logging.warn('caught exception "%s" finding module %s' % (sys.exc_info()[1],modulename))
+    try :
+        if fp :
+            m = imp.load_module(playername,fp,pathname,description)
+    except :
+        if not catch_exceptions:
+            raise
+        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1],playername))
+    finally :
+        if fp :
+            fp.close()
+    if None == m :
+        return None
+    f = getattr(m,attr)
+    return f
+
+def main(argv) :
+    if 1 == len(argv) :
+        print HELP
+        sys.exit()
+
+    c = argv[1]
+
+    if 0 :
+        pass
+
+    elif 'help' == c :
+        print HELP
+        sys.exit()
+
+    elif 'play' == c :
+        logging.basicConfig(level=logging.DEBUG,format='%(message)s',stream=sys.stdout)
+        n = int(sys.argv[2])
+        a_player = make_player(argv[3],0)
+        b_player = make_player(argv[4],0)
+        play_game(n,a_player,b_player,False)
+  
+    elif 'tourney' == c :
+        logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)-7s %(message)s',stream=sys.stdout)
+        t = int(sys.argv[2])
+        n = int(sys.argv[3])
+        player_names = sys.argv[4:]
+        raise NotImplementedError
+        play_tourney(n,player_names,True)
+    
+    else :
+        logging.error('i don\'t know how to "%s". look at the source' % c)
+        print HELP
+        sys.exit()
+
+if __name__ == '__main__' :
+    main(sys.argv)
 

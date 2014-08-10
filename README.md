@@ -11,32 +11,50 @@ of times, then the player who has played the shape that beats it more
 wins. If still tied, then the player who has played the shape that
 it beats most wins. Finally, if still tied, a coin is tossed.
 
+For example, if both players play "Rock", then the player who
+has played rock more often wins. If both players have played 
+rock the same amount of times, she who played "Scissors" more wins.
+If that is still tied, then the player who played "Paper" more
+wins.
+
 You can write a robot by implementing the get\_play() function in 
 p\_robot/player.py:
 
     def get_play(state) 
+        
+        return 1 for Rock, 2 for Paper, and 3 for Scissors.
     
         state is an 8 bit unsigned integer representing the
         result of the last hand. 
 
         if it is 0, it is the first game. 
 
-        otherwise, bits 3 and 4 represent your move,
-        bits 1 and 2 represent your opponent's move, and 
-        the zero'th bit is set if you won, or 0 if you lost.
+        otherwise, bits 0 and 1 represent your move,
+        bits 2 and 3 represent your opponent's move, 
+        bits 4,5, and 6 represent the number of tiebreakers
+        needed to resolve the game, and bit 7 is set
+        if you won, or 0 if you lost.
 
-        return 1 for Rock, 2 for Paper, and 3 for Scissors.
+        for example, if in the last game you played Rock,
+        and your opponent played Scissors, state would be:
 
-For a quick start to play first to 100 rock against random:
+        (1) | (3 << 2) | (0 << 4) | (1 << 7) = 141
+
+To play first to 100 rock against random:
 
     $ git clone https://github.com/botfights/roshambono.git
     $ cd liarsdice
-    $ python main.py play 100 p_rock p_random
+    $ python roshambono.py play 100 p_rock p_random
 
 Next, edit p\_robot/player.py, implement get\_play(), then play your
 robot against the random:
 
-    $ python main.py play 100 p_robot p_random
+    $ python roshambono.py play 100 p_robot p_random
+
+Last, to play a round robin tournament of 100 games each to 1000:
+    
+    $ python roshambono.py tournament 100 1000 p_robot p_random p_rock p_paper p_scissors
+
 
 Have fun!
 
