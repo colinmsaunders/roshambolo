@@ -64,15 +64,7 @@ def play_game(games,f_get_play_a,f_get_play_b,catch_exceptions) :
                 x = plays[0][BEATS[a_play]] - plays[1][BEATS[b_play]]
                 if 0 == x :
                     ties += 1
-                    x = plays[0][BEAT_BY[a_play]] - plays[1][BEAT_BY[b_play]]
-                    if 0 == x :
-                        ties += 1
-                        a_won = random.randint(0,1)
-                    elif 0 > x :
-                        a_won = 0
-                    else :
-                        a_won = 1
-                    pass
+                    a_won = random.randint(0,1)
                 elif 0 > x :
                     a_won = 0
                 else :
@@ -81,15 +73,14 @@ def play_game(games,f_get_play_a,f_get_play_b,catch_exceptions) :
                 a_won = 0
             else :
                 a_won = 1
-
         else :
             a_won = 1
             if BEATS[b_play] == a_play :
                 a_won = 0
         plays[0][a_play] += 1
         plays[1][b_play] += 1
-        last_a = a_play | (b_play << 2) | (ties << 4) | (a_won << 7)
-        last_b = b_play | (a_play << 2) | (ties << 4) | ((1 - a_won) << 7)
+        last_a = a_play | (b_play << 2) | (ties << 4) | (a_won << 6)
+        last_b = b_play | (a_play << 2) | (ties << 4) | ((1 - a_won) << 6)
         if a_won :
             wins[0] += 1
         else :
