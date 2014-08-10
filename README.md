@@ -12,7 +12,7 @@ wins. If still tied, then a coin is tossed.
 
 For example, if both players play "Rock", then the player who
 has played "Rock" more often wins. If both players have played 
-"Rock" the same amount of times, she who played "Scissors" more wins.
+"Rock" the same amount of times, she who played "Paper" more wins.
 
 You can write a robot by implementing the get\_play() function in 
 p\_robot/player.py:
@@ -40,7 +40,7 @@ p\_robot/player.py:
 To play first to 100 rock against random:
 
     $ git clone https://github.com/botfights/roshambono.git
-    $ cd liarsdice
+    $ cd roshambono
     $ python roshambono.py play 100 p_rock p_random
 
 Next, edit p\_robot/player.py, implement get\_play(), then play your
@@ -48,10 +48,9 @@ robot against the random:
 
     $ python roshambono.py play 100 p_robot p_random
 
-Last, to play a round robin tournament of 100 games each to 1000:
+To play a round robin tournament of 100 games each to 1000:
     
     $ python roshambono.py tournament 100 1000 p_robot p_random p_rock p_paper p_scissors
-
 
 Have fun!
 
