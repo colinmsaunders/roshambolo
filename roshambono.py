@@ -1,46 +1,4 @@
-# liarsdice.py -- the liar's dice logic functions, you can import this in your robots
-
-# the variation of liars dice (5 6-sided dies, ones not wild)
-#
-RULES_DICE          = 5
-RULES_FACES         = 6
-RULES_ONES_WILD     = 0
-
-STR_NUM_SINGULAR = {
-    1   : 'one',
-    2   : 'two',
-    3   : 'three',
-    4   : 'four',
-    5   : 'five',
-    6   : 'six',
-    7   : 'seven',
-    8   : 'eight',
-    9   : 'nine',
-}
-
-STR_NUM_PLURAL = {
-    1   : 'ones',
-    2   : 'twos',
-    3   : 'threes',
-    4   : 'fours',
-    5   : 'fives',
-    6   : 'sixes',
-    7   : 'sevens',
-    8   : 'eights',
-    9   : 'nines',
-}
-
-import random,logging,sys
-
-def verbose_play(play) :
-    if 0 :
-        pass
-    elif 0 == play :
-        return 'LIAR!'
-    elif 1 == (play // 10) :
-        return 'one %s' % STR_NUM_SINGULAR.get(play % 10,'???')
-    else :
-        return '%s %s' % (STR_NUM_SINGULAR.get(play // 10,'%d' % (play // 10)),STR_NUM_PLURAL.get(play % 10,'???'))
+# roshambono.py
 
 def get_play(game_id,hand_num,who,f_get_play,player_name,hands_str,history_str,catch_exceptions) :
     play = 0

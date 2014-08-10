@@ -1,70 +1,42 @@
-Liar's Dice
-===========
+Roshambono
+==========
 
-This is a game to pit [Liar's Dice][1] robots against each other.
+Roshambono is roshambo (or Rock-Paper-Scissors) with no ties.
 
-Liar's Dice is played amongst two or more players, each of whom
-begin with a dice cup and five six-sided dice. All players roll their
-dice, but don't reveal them. In turn, each player makes a declaration,
-such as "two threes" or "three sixes", or, a player may call "Liar".
-Each successive call must be higher than the previous (either a higher
-quantity, or a higher face with the same quantity). These declarations
-are for the *entire* set of dice combined. When a player calls "Liar",
-all dice are revealed. If the declartion is met (that is, the number 
-of faces is greater than or equal to the quantity claimed), then the 
-player who called liar must remove a die from their cup. If not, the 
-last player to make the declaration must remove a die from their cup. 
-If a player has no more dice in their cup they are out of the game. 
-Play continues in this fashion until only one player, the winner,
-remains.
+Rock beats scissors, scissors beats paper, paper beats rock.
 
-In this variation there are no wild dice, and no re-casting of dice.
+However, if there are is a tie, the player who has played that shape
+more often wins. If each player has played that shape the same number 
+of times, then the player who has played the shape that beats it more
+wins. If still tied, then the player who has played the shape that
+it beats most wins. Finally, if still tied, a coin is tossed.
 
 You can write a robot by implementing the get\_play() function in 
 p\_robot/player.py:
 
-    def get_play(me,hands,history) 
+    def get_play(state) 
+    
+        state is an 8 bit unsigned integer representing the
+        result of the last hand. 
 
-        me is the id of your player. eg, "A"
+        if it is 0, it is the first game. 
 
-        hands is a serialization of each players hands, all 
-        but your own will be masked until the hand is over
-        e.g.:
-            
-            A:23135,B:xx,C:xxxx
+        otherwise, bits 3 and 4 represent your move,
+        bits 1 and 2 represent your opponent's move, and 
+        the zero'th bit is set if you won, or 0 if you lost.
 
-        Here, you rolled one one, one two, two threes,
-        and a five. There are two other players still in the
-        hand, B and C, and they have two and four dice left,
-        respectfully.
+        return 1 for Rock, 2 for Paper, and 3 for Scissors.
 
-        history is the history of plays. e.g.:
+For a quick start to play first to 100 rock against random:
 
-            A:23,B:33,C:0
-
-        This means, player "A" called "two threes",
-        player "B" called "three threes", player C 
-        called "liar".
-
-        Your function should return an integer 
-        encoding the call, like, 23 for two threes,
-        105 for 10 fives, or 0 for "liar".
-
-Your get\_play() function will be called when it is your turn,
-and at the end of the hand (in which case the most recent play
-will be a call) so you can observe the showdown.
-
-For a quick start to play against the computer:
-
-    $ git clone https://github.com/botfights/liarsdice.git
+    $ git clone https://github.com/botfights/roshambono.git
     $ cd liarsdice
-    $ python main.py play p_human p_computer
+    $ python main.py play 100 p_rock p_random
 
 Next, edit p\_robot/player.py, implement get\_play(), then play your
-robot against the computer 100 times:
+robot against the random:
 
-    $ python main.py tournament 100 p_robot p_computer
+    $ python main.py play 100 p_robot p_random
 
 Have fun!
 
-[1]: http://en.wikipedia.org/wiki/Liar's_dice

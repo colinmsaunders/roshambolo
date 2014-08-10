@@ -1,17 +1,17 @@
 #!/usr/bin/python
 
-# main.py -- console liar's dice test harness
+# main.py -- console harness
 
 HELP = '''\
 usage:
 
-    To play a game against the computer:
+    To play a game to 1000 between p_rock and p_random:
 
-        $ python main.py play p_human p_computer
+        $ python main.py play 1000 p_rock p_random
 
-    To play a 10 game tourney between p_robot and p_computer and p_dummy: 
+    To play a round robin tourney for 100 games to 1000 between p_rock and p_paper and p_random: 
 
-        $ python main.py tournament 10 p_robot p_human p_dummy
+        $ python main.py tourney 100 1000 p_rock p_paper p_random
 '''
 
 import sys
@@ -20,7 +20,7 @@ import logging
 import random
 import time
 
-import liarsdice
+import roshambo
 
 # ignore SIG_PIPE
 from signal import (signal,
