@@ -33,10 +33,12 @@ SCISSORS    = 3
 BEATS       = [0,3,1,2]
 BEAT_BY     = [0,2,3,1]
 
-def get_play(f_get_play,state,catch_exceptions) :
+def get_play(n,f_get_play,state,catch_exceptions) :
+    catch_exceptions = False
+    """ TODO: Delete this comment to match style.  """
     play = 0
     try :
-        play = int(f_get_play(state))
+        play = int(f_get_play(n,state))
     except KeyboardInterrupt :
         raise
     except :
@@ -48,13 +50,13 @@ def get_play(f_get_play,state,catch_exceptions) :
     logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state,play,str(f_get_play)))
     return play
 
-def play_game(race_to,f_get_play_a,f_get_play_b,catch_exceptions) :
+def play_game(race_to,n_a,f_get_play_a,n_b,f_get_play_b,catch_exceptions) :
     wins = [0,0]
     plays = [[-1,0,0,0],[-1,0,0,0]]
     last_a = last_b = 0
     while 1 :
-        a_play = get_play(f_get_play_a,last_a,catch_exceptions)
-        b_play = get_play(f_get_play_b,last_b,catch_exceptions)
+        a_play = get_play(n_b,f_get_play_a,last_a,catch_exceptions)
+        b_play = get_play(n_a,f_get_play_b,last_b,catch_exceptions)
         ties = 0
         if a_play == b_play :
             ties += 1
@@ -130,16 +132,18 @@ def make_player(playername,catch_exceptions) :
 def play_tourney(t,n,playernames) :
     scores = {}
     players = []
-    for i in playernames :
+    for n, i in enumerate(playernames) :
         f = make_player(i,True)
         scores[len(players)] = 0
-        players.append(f)
+        players.append((n,f))
     for r in range(t) :
         for i in range(len(players)) :
+            n_a, p_a = players[i]
             for j in range(len(players)) :
+                n_b, p_b = players[j]
                 if i >= j :
                     continue
-                x = play_game(n,players[i],players[j],True)
+                x = play_game(n,n_a,p_a,n_b,p_b,True)
                 if 0 == x :
                     scores[i] += 1
                 else :
@@ -168,7 +172,7 @@ def main(argv) :
         n = int(sys.argv[2])
         a_player = make_player(argv[3],False)
         b_player = make_player(argv[4],False)
-        x = play_game(n,a_player,b_player,False)
+        x = play_game(n,0,a_player,1,b_player,False)
         return x
   
     elif 'tourney' == c :

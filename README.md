@@ -17,10 +17,12 @@ has played "Rock" more often wins. If both players have played
 You can write a robot by implementing the get\_play() function in 
 p\_robot/player.py:
 
-    def get_play(state) 
+    def get_play(player_id, state) 
         
         return 1 for Rock, 2 for Paper, and 3 for Scissors.
     
+        player_id is an integer representing the id of your current opponent.
+
         state is an 8 bit unsigned integer representing the
         result of the last hand. 
 

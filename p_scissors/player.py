@@ -1,4 +1,4 @@
 # scissors
 
-def get_play(x) :
+def get_play(n,x) :
     return 3

@@ -2,6 +2,6 @@
 
 import random
 
-def get_play(last_game):
+def get_play(n,last_game):
     return random.choice((1,2,3))
 
