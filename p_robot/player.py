@@ -4,6 +4,6 @@
 # write a robot, or look at computer.py for
 # an example.
 
-def get_play(last_game):
+def get_play(n,last_game):
     return 0
 
