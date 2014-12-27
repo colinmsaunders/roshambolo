@@ -132,10 +132,10 @@ def make_player(playername,catch_exceptions) :
 def play_tourney(t,n,playernames) :
     scores = {}
     players = []
-    for n, i in enumerate(playernames) :
+    for np, i in enumerate(playernames) :
         f = make_player(i,True)
         scores[len(players)] = 0
-        players.append((n,f))
+        players.append((np,f))
     for r in range(t) :
         for i in range(len(players)) :
             n_a, p_a = players[i]
