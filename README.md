@@ -50,7 +50,7 @@ robot against the random:
 
 To play a round robin tournament of 100 games each to 1000:
     
-    $ python roshambono.py tournament 100 1000 p_robot p_random p_rock p_paper p_scissors
+    $ python roshambono.py tourney 100 1000 p_robot p_random p_rock p_paper p_scissors
 
 Have fun!
 
