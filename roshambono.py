@@ -67,7 +67,7 @@ def play_game(race_to, f_get_play_a, f_get_play_b, catch_exceptions):
                 x = plays[0][BEAT_BY[a_play]] - plays[1][BEAT_BY[b_play]]
                 if 0 == x:
                     ties += 1
-                    a_won = random.randint(0,1)
+                    a_won = random.randint(0, 1)
                 elif 0 > x:
                     a_won = 0
                 else:
@@ -156,7 +156,7 @@ def play_tourney(t, n, playernames):
                         % (r, t, i, j, scores[i], scores[j], playernames[i], playernames[j]))
         logging.info('STATUS\t%.2f\t\t%s' % (r / float(t), 
                 ','.join(['%s:%s' % (playernames[i], scores[i]) for i in range(len(players))])))
-    logging.info('STATUS\t%.2f\t\t%s' % (100.0,','.join(['%s:%s' 
+    logging.info('STATUS\t%.2f\t\t%s' % (100.0, ','.join(['%s:%s' 
             % (playernames[i], scores[i]) for i in range(len(players))])))
     return -1
 
@@ -180,7 +180,7 @@ def main(argv):
         n = int(sys.argv[2])
         a_player = make_player(argv[3], False)
         b_player = make_player(argv[4], False)
-        x = play_game(n,a_player, b_player, False)
+        x = play_game(n, a_player, b_player, False)
         return x
   
     elif 'tourney' == c:
