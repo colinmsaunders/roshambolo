@@ -44,7 +44,7 @@ def get_play(f_get_play, state, catch_exceptions):
         if not catch_exceptions:
             raise
         logging.warn('caught exception "%s" calling %s \'s get_play() function'
-                    % (sys.exc_info()[1], str(f_get_play)))
+                     % (sys.exc_info()[1], str(f_get_play)))
     if play < 1 or play > 3:
         play = random.randint(1, 3)
     logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state, play, str(f_get_play)))
@@ -88,8 +88,8 @@ def play_game(race_to, f_get_play_a, f_get_play_b, catch_exceptions):
             wins[0] += 1
         else:
             wins[1] += 1
-        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d' 
-            % (wins[0], wins[1], a_play, b_play, a_won))
+        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d'
+                      % (wins[0], wins[1], a_play, b_play, a_won))
         if wins[0] == race_to:
             return 0
         if wins[1] == race_to:
@@ -118,14 +118,15 @@ def make_player(playername, catch_exceptions):
         if not catch_exceptions:
             raise
         logging.warn('caught exception "%s" finding module %s' 
-                % (sys.exc_info()[1], modulename))
+                     % (sys.exc_info()[1], modulename))
     try:
         if fp:
             m = imp.load_module(playername, fp, pathname, description)
     except:
         if not catch_exceptions:
             raise
-        logging.warn('caught exception "%s" importing %s' % (sys.exc_info()[1], playername))
+        logging.warn('caught exception "%s" importing %s' 
+                     % (sys.exc_info()[1], playername))
     finally:
         if fp:
             fp.close()
@@ -152,12 +153,13 @@ def play_tourney(t, n, playernames):
                     scores[i] += 1
                 else:
                     scores[j] += 1
-                logging.info('SCORE\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' 
-                        % (r, t, i, j, scores[i], scores[j], playernames[i], playernames[j]))
-        logging.info('STATUS\t%.2f\t\t%s' % (r / float(t), 
-                ','.join(['%s:%s' % (playernames[i], scores[i]) for i in range(len(players))])))
+                logging.info('SCORE\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' % (
+                             r, t, i, j, scores[i], scores[j], 
+                             playernames[i], playernames[j]))
+        logging.info('STATUS\t%.2f\t\t%s' % (r / float(t), ','.join(
+                     ['%s:%s' % (playernames[i], scores[i]) for i in range(len(players))])))
     logging.info('STATUS\t%.2f\t\t%s' % (100.0, ','.join(['%s:%s' 
-            % (playernames[i], scores[i]) for i in range(len(players))])))
+                 % (playernames[i], scores[i]) for i in range(len(players))])))
     return -1
 
 
