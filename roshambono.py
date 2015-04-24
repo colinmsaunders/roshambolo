@@ -5,14 +5,14 @@
 HELP = '''\
 usage:
 
-    To play a game to 1000 between p_rock and p_random:
+    To play a race to 10 between p_rock and p_random:
 
-        $ python roshambono.py play 1000 p_rock p_random
+        $ python roshambono.py race 10 p_rock p_random
 
-    To play a round robin tourney for 100 games to 1000 between p_rock
-    and p_paper and p_random:
+    To play a round robin tourney of best of 100 races to 10000
+    between p_rock and p_paper and p_random:
 
-        $ python roshambono.py tourney 100 1000 p_rock p_paper p_random
+        $ python roshambono.py tourney 100 10000 p_rock p_paper p_random
 '''
 
 import sys
@@ -34,10 +34,10 @@ BEATS = [None, SCISSORS, ROCK, PAPER]
 BEAT_BY = [None, PAPER, SCISSORS, ROCK]
 
 
-def get_play(f_get_play, state, catch_exceptions):
+def get_play(f_get_play, opponent_id, state, catch_exceptions):
     play = 0
     try:
-        play = int(f_get_play(state))
+        play = int(f_get_play(opponent_id, state & 3, (state >> 2) & 3, (state >> 6) & 1))
     except KeyboardInterrupt:
         raise
     except:
@@ -51,13 +51,13 @@ def get_play(f_get_play, state, catch_exceptions):
     return play
 
 
-def play_game(race_to, f_get_play_a, f_get_play_b, catch_exceptions):
+def play_game(race_to, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions):
     wins = [0, 0]
     plays = [[-1, 0, 0, 0], [-1, 0, 0, 0]]
     last_a = last_b = 0
     while 1:
-        a_play = get_play(f_get_play_a, last_a, catch_exceptions)
-        b_play = get_play(f_get_play_b, last_b, catch_exceptions)
+        a_play = get_play(b_id, f_get_play_a, last_a, catch_exceptions)
+        b_play = get_play(a_id, f_get_play_b, last_b, catch_exceptions)
         ties = 0
         if a_play == b_play:
             ties += 1
@@ -148,7 +148,7 @@ def play_tourney(t, n, playernames):
             for j in range(len(players)):
                 if i >= j:
                     continue
-                x = play_game(n, players[i], players[j], True)
+                x = play_game(n, players[i], players[j], i, j, True)
                 if 0 == x:
                     scores[i] += 1
                 else:
@@ -177,14 +177,14 @@ def main(argv):
         print(HELP)
         sys.exit()
 
-    elif 'play' == c:
+    elif 'race' == c:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s', stream=sys.stdout)
         n = int(sys.argv[2])
         a_player = make_player(argv[3], False)
         b_player = make_player(argv[4], False)
-        x = play_game(n, a_player, b_player, False)
+        x = play_game(n, a_player, b_player, 0, 1, False)
         return x
-  
+
     elif 'tourney' == c:
         logging.basicConfig(level=logging.INFO, 
                 format='%(asctime)s %(levelname)-7s %(message)s', stream=sys.stdout)

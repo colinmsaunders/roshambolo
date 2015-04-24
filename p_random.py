@@ -3,5 +3,5 @@
 import random
 
 
-def get_play(last_game):
+def get_play(opponent_id, my_play, her_play, i_won):
     return random.choice((1, 2, 3))
