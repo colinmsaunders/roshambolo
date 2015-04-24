@@ -34,11 +34,21 @@ BEATS = [None, SCISSORS, ROCK, PAPER]
 BEAT_BY = [None, PAPER, SCISSORS, ROCK]
 
 
+<<<<<<< HEAD
 def get_play(playername, f_get_play, opponent_id, state, catch_exceptions):
     play = 0
     try:
         play = int(f_get_play(opponent_id, state & 3, (state >> 2) & 3, (state >> 6) & 1))
     except KeyboardInterrupt:
+=======
+def get_play(n,f_get_play,state,catch_exceptions) :
+    catch_exceptions = False
+    """ TODO: Delete this comment to match style.  """
+    play = 0
+    try :
+        play = int(f_get_play(n,state))
+    except KeyboardInterrupt :
+>>>>>>> b6800b08dd8830f91d87277e4e867b13708606e9
         raise
     except:
         if not catch_exceptions:
@@ -50,6 +60,7 @@ def get_play(playername, f_get_play, opponent_id, state, catch_exceptions):
     logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state, play, playername))
     return play
 
+<<<<<<< HEAD
 
 def play_game(race_to, a_playername, b_playername, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions):
     wins = [0, 0]
@@ -58,6 +69,15 @@ def play_game(race_to, a_playername, b_playername, f_get_play_a, f_get_play_b, a
     while 1:
         a_play = get_play(a_playername, f_get_play_a, b_id, last_a, catch_exceptions)
         b_play = get_play(b_playername, f_get_play_b, a_id, last_b, catch_exceptions)
+=======
+def play_game(race_to,n_a,f_get_play_a,n_b,f_get_play_b,catch_exceptions) :
+    wins = [0,0]
+    plays = [[-1,0,0,0],[-1,0,0,0]]
+    last_a = last_b = 0
+    while 1 :
+        a_play = get_play(n_b,f_get_play_a,last_a,catch_exceptions)
+        b_play = get_play(n_a,f_get_play_b,last_b,catch_exceptions)
+>>>>>>> b6800b08dd8830f91d87277e4e867b13708606e9
         ties = 0
         if a_play == b_play:
             ties += 1
@@ -140,6 +160,7 @@ def make_player(playername, catch_exceptions):
 def play_tourney(t, n, playernames):
     scores = {}
     players = []
+<<<<<<< HEAD
     for i in playernames:
         f = make_player(i, True)
         scores[len(players)] = 0
@@ -151,6 +172,21 @@ def play_tourney(t, n, playernames):
                     continue
                 x = play_game(n, playernames[i], playernames[j], players[i], players[j], i, j, True)
                 if 0 == x:
+=======
+    for np, i in enumerate(playernames) :
+        f = make_player(i,True)
+        scores[len(players)] = 0
+        players.append((np,f))
+    for r in range(t) :
+        for i in range(len(players)) :
+            n_a, p_a = players[i]
+            for j in range(len(players)) :
+                n_b, p_b = players[j]
+                if i >= j :
+                    continue
+                x = play_game(n,n_a,p_a,n_b,p_b,True)
+                if 0 == x :
+>>>>>>> b6800b08dd8830f91d87277e4e867b13708606e9
                     scores[i] += 1
                 else:
                     scores[j] += 1
@@ -181,9 +217,15 @@ def main(argv):
     elif 'game' == c:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s', stream=sys.stdout)
         n = int(sys.argv[2])
+<<<<<<< HEAD
         a_player = make_player(argv[3], False)
         b_player = make_player(argv[4], False)
         x = play_game(n, argv[3], argv[4], a_player, b_player, 0, 1, False)
+=======
+        a_player = make_player(argv[3],False)
+        b_player = make_player(argv[4],False)
+        x = play_game(n,0,a_player,1,b_player,False)
+>>>>>>> b6800b08dd8830f91d87277e4e867b13708606e9
         return x
 
     elif 'tourney' == c:
