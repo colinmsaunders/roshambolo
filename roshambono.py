@@ -7,7 +7,7 @@ usage:
 
     To play a race to 10 between p_rock and p_random:
 
-        $ python roshambono.py race 10 p_rock p_random
+        $ python roshambono.py game 10 p_rock p_random
 
     To play a round robin tourney of best of 100 races to 10000
     between p_rock and p_paper and p_random:
@@ -34,7 +34,7 @@ BEATS = [None, SCISSORS, ROCK, PAPER]
 BEAT_BY = [None, PAPER, SCISSORS, ROCK]
 
 
-def get_play(f_get_play, opponent_id, state, catch_exceptions):
+def get_play(playername, f_get_play, opponent_id, state, catch_exceptions):
     play = 0
     try:
         play = int(f_get_play(opponent_id, state & 3, (state >> 2) & 3, (state >> 6) & 1))
@@ -47,17 +47,17 @@ def get_play(f_get_play, opponent_id, state, catch_exceptions):
                      % (sys.exc_info()[1], str(f_get_play)))
     if play < 1 or play > 3:
         play = random.randint(1, 3)
-    logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state, play, str(f_get_play)))
+    logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state, play, playername))
     return play
 
 
-def play_game(race_to, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions):
+def play_game(race_to, a_playername, b_playername, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions):
     wins = [0, 0]
     plays = [[-1, 0, 0, 0], [-1, 0, 0, 0]]
     last_a = last_b = 0
     while 1:
-        a_play = get_play(b_id, f_get_play_a, last_a, catch_exceptions)
-        b_play = get_play(a_id, f_get_play_b, last_b, catch_exceptions)
+        a_play = get_play(a_playername, f_get_play_a, b_id, last_a, catch_exceptions)
+        b_play = get_play(b_playername, f_get_play_b, a_id, last_b, catch_exceptions)
         ties = 0
         if a_play == b_play:
             ties += 1
@@ -99,13 +99,11 @@ def play_game(race_to, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions)
 def split_playername(playername):
     parts = playername.split(':')
     if 1 == len(parts):
-        return (parts[0], parts[0], 'player', 'get_play')
+        return (parts[0], None, parts[0], 'get_play')
     if 2 == len(parts):
-        return (parts[0], parts[1], 'player', 'get_play')
+        return ('%s_%s' % (parts[0], parts[1]), None, parts[0], parts[1])
     if 3 == len(parts):
-        return (parts[0], parts[1], parts[2], 'get_play')
-    if 4 == len(parts):
-        return (parts[0], parts[1], parts[2], parts[3])
+        return ('%s_%s' % (parts[0], parts[1]), parts[2], parts[3])
     raise Exception('i don\'t know how to parse "%s"' % playername)
 
 
@@ -113,7 +111,10 @@ def make_player(playername, catch_exceptions):
     name, path, modulename, attr = split_playername(playername)
     fp = pathname = description = m = None
     try:
-        fp, pathname, description = imp.find_module(modulename, [path, ])
+        if None == path:
+            fp, pathname, description = imp.find_module(modulename)
+        else:
+            fp, pathname, description = imp.find_module(modulename, [path, ])
     except:
         if not catch_exceptions:
             raise
@@ -148,7 +149,7 @@ def play_tourney(t, n, playernames):
             for j in range(len(players)):
                 if i >= j:
                     continue
-                x = play_game(n, players[i], players[j], i, j, True)
+                x = play_game(n, playernames[i], playernames[j], players[i], players[j], i, j, True)
                 if 0 == x:
                     scores[i] += 1
                 else:
@@ -177,12 +178,12 @@ def main(argv):
         print(HELP)
         sys.exit()
 
-    elif 'race' == c:
+    elif 'game' == c:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s', stream=sys.stdout)
         n = int(sys.argv[2])
         a_player = make_player(argv[3], False)
         b_player = make_player(argv[4], False)
-        x = play_game(n, a_player, b_player, 0, 1, False)
+        x = play_game(n, argv[3], argv[4], a_player, b_player, 0, 1, False)
         return x
 
     elif 'tourney' == c:

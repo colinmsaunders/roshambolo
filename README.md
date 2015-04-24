@@ -15,42 +15,31 @@ has played "Rock" more often wins. If both players have played
 "Rock" the same amount of times, she who played "Paper" more wins.
 
 You can write a robot by implementing the get\_play() function in 
-p\_robot/player.py:
+p\_robot.py:
 
-    def get_play(state) 
+    def get_play(opponent_id, my_play, her_play, i_won) 
         
         return 1 for Rock, 2 for Paper, and 3 for Scissors.
     
-        state is an 8 bit unsigned integer representing the
-        result of the last hand. 
+        opponent_id is an identifier of your opponent
 
-        if it is 0, it is the first game. 
-
-        otherwise, bits 0 and 1 represent your move,
-        bits 2 and 3 represent your opponent's move, 
-        bits 4 and 5 represent the number of tiebreakers
-        needed to resolve the game, and 
-        bit 6 is set if you won, or 0 if you lost.
-
-        for example, if in the last game you played Rock,
-        and your opponent played Scissors, state would be:
-
-        (1) | (3 << 2) | (0 << 4) | (1 << 6) = 77
+        my_play and her_play are your plays from last round,
+        and i_won is 1 if you won, 0 if you lost
 
 To play first to 100 rock against random:
 
-    $ git clone https://github.com/botfights/roshambono.git
+    $ git clone https://github.com/colinmsaunders/roshambono.git
     $ cd roshambono
     $ python roshambono.py play 100 p_rock p_random
 
-Next, edit p\_robot/player.py, implement get\_play(), then play your
+Next, edit p\_robot.py, implement get\_play(), then play your
 robot against the random:
 
     $ python roshambono.py play 100 p_robot p_random
 
 To play a round robin tournament of 100 games each to 1000:
     
-    $ python roshambono.py tourney 100 1000 p_robot p_random p_rock p_paper p_scissors
+    $ python roshambono.py tourney 100 1000 p_robot p_random p_rock 
 
 Have fun!
 
