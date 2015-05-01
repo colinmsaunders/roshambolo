@@ -10,9 +10,9 @@ usage:
         $ python roshambono.py game 10 p_rock p_random
 
     To play a round robin tourney of best of 100 races to 10000
-    between p_rock and p_paper and p_random:
+    between p_rock and p_robot and p_random:
 
-        $ python roshambono.py tourney 100 10000 p_rock p_paper p_random
+        $ python roshambono.py tourney 100 10000 p_rock p_robot p_random
 '''
 
 import sys
@@ -33,6 +33,12 @@ SCISSORS = 3
 BEATS = [None, SCISSORS, ROCK, PAPER]
 BEAT_BY = [None, PAPER, SCISSORS, ROCK]
 
+VERBOSE_PLAYS = {
+    ROCK: 'ROCK',
+    PAPER: 'PAPER',
+    SCISSORS: 'SCISSORS'
+}
+
 
 def get_play(playername, f_get_play, opponent_id, state, catch_exceptions):
     play = 0
@@ -47,8 +53,9 @@ def get_play(playername, f_get_play, opponent_id, state, catch_exceptions):
                      % (sys.exc_info()[1], str(f_get_play)))
     if play < 1 or play > 3:
         play = random.randint(1, 3)
-    logging.debug('LOG_PLAY\t%d\t%d\t%s' % (state, play, playername))
+    logging.debug('PLAY\t%d\t%d\t%d\t%d\t\t%s plays %s' % (state & 3, (state >> 2) & 3, (state >> 6) & 1, play, playername, VERBOSE_PLAYS[play]))
     return play
+
 
 def play_game(race_to, a_playername, b_playername, f_get_play_a, f_get_play_b, a_id, b_id, catch_exceptions):
     wins = [0, 0]
@@ -87,8 +94,10 @@ def play_game(race_to, a_playername, b_playername, f_get_play_a, f_get_play_b, a
             wins[0] += 1
         else:
             wins[1] += 1
-        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d'
-                      % (wins[0], wins[1], a_play, b_play, a_won))
+        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d\t%s beat %s'
+                      % (wins[0], wins[1], a_play, b_play, a_won, 
+                      [a_playername, b_playername][a_won], 
+                      [b_playername, a_playername][1 - a_won]))
         if wins[0] == race_to:
             return 0
         if wins[1] == race_to:
@@ -160,7 +169,6 @@ def play_tourney(t, n, playernames):
                      ['%s:%s' % (playernames[i], scores[i]) for i in range(len(players))])))
     logging.info('STATUS\t%.2f\t\t%s' % (100.0, ','.join(['%s:%s' 
                  % (playernames[i], scores[i]) for i in range(len(players))])))
-    return -1
 
 
 def main(argv):
@@ -191,8 +199,8 @@ def main(argv):
         t = int(sys.argv[2])
         n = int(sys.argv[3])
         playernames = sys.argv[4:]
-        x = play_tourney(t, n, playernames)
-        return x
+        play_tourney(t, n, playernames)
+        return
     
     else:
         logging.error('i don\'t know how to "%s". look at the source' % c)
