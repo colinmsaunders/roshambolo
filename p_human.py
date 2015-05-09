@@ -1,4 +1,4 @@
-# p_human.py -- human roshambono robot
+# p_human.py -- human roshambozo robot
 
 import random
 

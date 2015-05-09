@@ -1,4 +1,4 @@
-# robot.py -- sample roshambono robot
+# robot.py -- sample roshambozo robot
 
 # See README.md for full documentation on how to
 # write a robot.

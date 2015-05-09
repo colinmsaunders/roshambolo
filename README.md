@@ -1,7 +1,7 @@
-Roshambono
+Roshambozo
 ==========
 
-Roshambono is roshambo (or Rock-Paper-Scissors) with no ties.
+Roshambozo is roshambo (or Rock-Paper-Scissors) with no ties.
 
 Rock beats scissors, scissors beats paper, paper beats rock.
 
@@ -28,18 +28,18 @@ p\_robot.py:
 
 To play first to 100 rock against random:
 
-    $ git clone https://github.com/colinmsaunders/roshambono.git
-    $ cd roshambono
-    $ python roshambono.py play 100 p_rock p_random
+    $ git clone https://github.com/colinmsaunders/roshambozo.git
+    $ cd roshambozo
+    $ python roshambozo.py play 100 p_rock p_random
 
 Next, edit p\_robot.py, implement get\_play(), then play your
 robot against the random:
 
-    $ python roshambono.py play 100 p_robot p_random
+    $ python roshambozo.py play 100 p_robot p_random
 
 To play a round robin tournament of 100 games each to 1000:
     
-    $ python roshambono.py tourney 100 1000 p_robot p_random p_rock 
+    $ python roshambozo.py tourney 100 1000 p_robot p_random p_rock 
 
 Have fun!
 
