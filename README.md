@@ -14,25 +14,22 @@ For example, if both players play "Rock", then the player who
 has played "Rock" more often wins. If both players have played 
 "Rock" the same amount of times, she who played "Paper" more wins.
 
-You can write a robot by implementing the get\_play() function in 
+You can write a robot by implementing the play() function in 
 p\_robot.py:
 
     def play(my_id, opponent_id)
 
-You will also be called to observe the result:
+`my\_id` is a unique identifier for your player, 
+opponent\_id identifies your opponent. Return 1 for ROCK, 
+2 for PAPER, or 3 for SCISSORS.
 
-    def observe(player1_id, player2_id, play_a, play_b, result, score)
+You will also be called to observe all results, even for games you
+aren't playing in:
 
-All plays are observed by all players.
+    def observe(my_id, his_id, her_id, his_play, her_play, 
+                result, his_score, her_score)
 
-my_play, her_play, i_won) 
-        
-        return 1 for Rock, 2 for Paper, and 3 for Scissors.
-    
-        opponent_id is an identifier of your opponent
-
-        my_play and her_play are your plays from last round,
-        and i_won is 1 if you won, 0 if you lost
+`result` is 0 if "he" won the last game, 1 if "she" won.
 
 To play first to 100 rock against random:
 
@@ -40,14 +37,18 @@ To play first to 100 rock against random:
     $ cd roshambozo
     $ python roshambozo.py play 100 p_rock p_random
 
-Next, edit p\_robot.py, implement get\_play(), then play your
-robot against the random:
+Next, edit p\_robot.py, implement play() and optionally observe(), 
+then play your robot against random:
 
     $ python roshambozo.py play 100 p_robot p_random
 
 To play a round robin tournament of 100 games each to 1000:
     
     $ python roshambozo.py tourney 100 1000 p_robot p_random p_rock 
+
+To time your robot (to make sure it's not too slow, compared to p\_rock):
+
+    $ python roshambozo.py time p_robot
 
 Have fun!
 

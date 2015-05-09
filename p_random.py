@@ -1,7 +1,6 @@
-# random.py -- sample roshambozo robot
+# p_random.py -- sample roshambozo robot
 
-import random
-
+import p_random
 
 def play(my_id, opponent_id):
     return random.choice((1, 2, 3))

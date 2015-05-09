@@ -12,7 +12,7 @@ VERBOSE_PLAYS = {
     3:  'SCISSORS'
 }
 
-def get_play(opponent_id, my_play, her_play, i_won):
+def play(my_id, opponent_id):
 
     # first, get some information about the current state of the game
     #
