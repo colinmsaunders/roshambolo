@@ -160,6 +160,7 @@ def play_tourney(t, n, players):
     for i in players:
         scores[i[0]] = [i, 0]
     for r in range(t):
+        random.shuffle(players)
         for i in range(len(players)):
             for j in range(len(players)):
                 if i >= j:
