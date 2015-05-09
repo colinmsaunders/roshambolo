@@ -14,13 +14,14 @@ For example, if both players play "Rock", then the player who
 has played "Rock" more often wins. If both players have played 
 "Rock" the same amount of times, she who played "Paper" more wins.
 
-You can write a robot by implementing the play() function in 
-p\_robot.py:
+You can write a robot by implementing the `play()` function in 
+`p_robot.py`:
 
-    def play(my_id, opponent_id)
+    def play(my_id, opponent_id):
+        pass
 
-`my\_id` is a unique identifier for your player, 
-opponent\_id identifies your opponent. Return 1 for ROCK, 
+`my_id` is a unique identifier for your player, 
+`opponent_id` identifies your opponent. Return 1 for ROCK, 
 2 for PAPER, or 3 for SCISSORS.
 
 You will also be called to observe all results, even for games you
@@ -28,6 +29,7 @@ aren't playing in:
 
     def observe(my_id, his_id, her_id, his_play, her_play, 
                 result, his_score, her_score)
+        pass
 
 `result` is 0 if "he" won the last game, 1 if "she" won.
 
@@ -37,7 +39,7 @@ To play first to 100 rock against random:
     $ cd roshambozo
     $ python roshambozo.py play 100 p_rock p_random
 
-Next, edit p\_robot.py, implement play() and optionally observe(), 
+Next, edit `p_robot.py`, implement `play()` and optionally `observe()`, 
 then play your robot against random:
 
     $ python roshambozo.py play 100 p_robot p_random
