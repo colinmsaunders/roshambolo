@@ -28,21 +28,28 @@ You will also be called to observe all results, even for games you
 aren't playing in:
 
     def observe(my_id, his_id, her_id, his_play, her_play, 
-                result, his_score, her_score)
+                winner, his_score, her_score)
         pass
 
-`result` is 0 if "he" won the last game, 1 if "she" won.
+`winner` is 0 if "he" won the last game, 1 if "she" won.
 
-To play first to 100 rock against random:
+To get a copy of the game:
 
     $ git clone https://github.com/colinmsaunders/roshambozo.git
     $ cd roshambozo
-    $ python roshambozo.py play 100 p_rock p_random
+
+To play a race to 3, human against computer:
+
+    $ python roshambozo.py game 3 p_human p_bozo
+
+To play first to 100 rock against random:
+
+    $ python roshambozo.py game 100 p_rock p_random
 
 Next, edit `p_robot.py`, implement `play()` and optionally `observe()`, 
 then play your robot against random:
 
-    $ python roshambozo.py play 100 p_robot p_random
+    $ python roshambozo.py game 100 p_robot p_random
 
 To play a round robin tournament of 100 games each to 1000:
     

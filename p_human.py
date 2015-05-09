@@ -12,19 +12,13 @@ VERBOSE_PLAYS = {
     3:  'SCISSORS'
 }
 
-def play(my_id, opponent_id):
 
-    # first, get some information about the current state of the game
-    #
-    pass
+def play(my_id, opponent_id):
 
     # tell the user what's going on
     #
-    print("Your opponent is: %s" % opponent_id)
-    if 0 != my_play:
-        print("You played %s, your opponent played %s, you %s." % 
-                (VERBOSE_PLAYS[my_play], VERBOSE_PLAYS[her_play], 
-                 ['lost', 'won'][i_won]))
+    print("You are player #%s, your opponent is player %s." % 
+          (my_id, opponent_id))
 
     # get the user's move
     #
@@ -32,7 +26,7 @@ def play(my_id, opponent_id):
     try:
         print("What is your play? (1 for Rock, 2 for Paper, 3 for Scissors)")
         s = raw_input()
-        play = int(play)
+        play = int(s)
     except KeyboardInterrupt:
         raise
     except:
@@ -50,4 +44,16 @@ def play(my_id, opponent_id):
     # and return it to the referree
     #
     return play
+
+
+def observe(my_id, his_id, her_id, his_play, her_play, 
+            result, his_score, her_score):
+    print "result: %s" % result
+    print("Player #%s played %s, player #%s played %s, player #%s won, "
+          "the score is %d to %d." % (
+              his_id, VERBOSE_PLAYS[his_play],
+              her_id, VERBOSE_PLAYS[her_play],
+              [his_id, her_id][result], 
+              his_score, her_score))
+
 

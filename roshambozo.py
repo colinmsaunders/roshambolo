@@ -89,35 +89,35 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
                 x = plays[0][BEAT_BY[a_play]] - plays[1][BEAT_BY[b_play]]
                 if 0 == x:
                     ties += 1
-                    a_won = random.randint(0, 1)
+                    winner = random.randint(0, 1)
                 elif 0 > x:
-                    a_won = 0
+                    winner = 0
                 else:
-                    a_won = 1
+                    winner = 1
             elif 0 > x:
-                a_won = 0
+                winner = 0
             else:
-                a_won = 1
+                winner = 1
         else:
-            a_won = 1
+            winner = 0
             if BEATS[b_play] == a_play:
-                a_won = 0
+                winner = 1
         plays[0][a_play] += 1
         plays[1][b_play] += 1
-        if a_won:
+        if 0 == winner:
             wins[0] += 1
         else:
             wins[1] += 1
         logging.debug('GAME\t%d\t%d\t%d\t%d\t%d\t%s\t%s'
                       % (wins[0], wins[1], 
-                          a_play, b_play, a_won, 
-                          [player1[3], player2[3]][1 - a_won], 
-                          [player1[3], player2[3]][a_won]))
+                          a_play, b_play, winner, 
+                          [player1[3], player2[3]][winner], 
+                          [player1[3], player2[3]][1 - winner]))
         for i in observers:
             if None == i[2]:
                 continue
             observe_play(i, player1[0], player2[0], a_play, b_play, 
-                         a_won, wins[0], wins[1], catch_exceptions)
+                         winner, wins[0], wins[1], catch_exceptions)
         if wins[0] == race_to:
             logging.debug('G_RESULT\t%s beat %s' % (player1[3], player2[3]))
             return 0
@@ -205,6 +205,13 @@ if __name__ == '__main__':
         random.shuffle(playernames)
         player1 = make_player(1, playernames[0], False)
         player2 = make_player(2, playernames[1], False)
+        x = play_game(n, player1, player2, (player1, player2), False)
+        sys.exit()
+
+    elif 'human' == c:
+        n = int(sys.argv[2])
+        player1 = make_player(1, 'p_human', False)
+        player2 = make_player(2, sys.argv[3], False)
         x = play_game(n, player1, player2, (player1, player2), False)
         sys.exit()
 
