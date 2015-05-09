@@ -17,7 +17,15 @@ has played "Rock" more often wins. If both players have played
 You can write a robot by implementing the get\_play() function in 
 p\_robot.py:
 
-    def get_play(opponent_id, my_play, her_play, i_won) 
+    def play(my_id, opponent_id)
+
+You will also be called to observe the result:
+
+    def observe(player1_id, player2_id, play_a, play_b, result, score)
+
+All plays are observed by all players.
+
+my_play, her_play, i_won) 
         
         return 1 for Rock, 2 for Paper, and 3 for Scissors.
     

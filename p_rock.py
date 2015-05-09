@@ -1,5 +1,5 @@
 # rock.py -- Good ol' rock.
 
 
-def get_play(opponent_id, my_play, her_play, i_won):
+def play(my_id, opponent_id):
     return 1
