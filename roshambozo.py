@@ -178,7 +178,8 @@ def play_tourney(t, n, players):
             logging.info('SCORE\t%d\t%d\t%s' % (r, scores[i][1], scores[i][0][3]))
 
 
-if __name__ == '__MAIN__':
+if __name__ == '__main__':
+
     if 1 == len(sys.argv):
         print(HELP)
         sys.exit()
@@ -200,7 +201,7 @@ if __name__ == '__MAIN__':
         player1 = make_player(1, playernames[0], False)
         player2 = make_player(2, playernames[1], False)
         x = play_game(n, player1, player2, (player1, player2), False)
-        return x
+        sys.exit()
 
     elif 'tourney' == c:
         logging.basicConfig(level=logging.INFO, 
@@ -213,7 +214,7 @@ if __name__ == '__MAIN__':
         for player_id, playername in enumerate(playernames):
             players.append(make_player(player_id, playername, True))
         play_tourney(t, n, players)
-        return
+        sys.exit()
 
     elif 'time' == c:
         p_random = make_player(1, 'p_random', False)
@@ -231,7 +232,7 @@ if __name__ == '__MAIN__':
         player_time = time.time() - start
         print('%s elapsed: %f seconds' % (p_player[3], player_time))
         print('%s is %.1fx slower than p_rock' % (p_player[3], player_time / rock_time))
-
+        sys.exit()
     
     else:
         logging.error('i don\'t know how to "%s". look at the source' % c)
