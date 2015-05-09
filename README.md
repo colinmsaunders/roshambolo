@@ -14,15 +14,15 @@ For example, if both players play "Rock", then the player who
 has played "Rock" more often wins. If both players have played 
 "Rock" the same amount of times, she who played "Paper" more wins.
 
-You can write a robot by implementing the `play()` function in 
+You write a robot by implementing the `play()` function in 
 `p_robot.py`:
 
     def play(my_id, opponent_id):
         pass
 
 `my_id` is a unique identifier for your player, 
-`opponent_id` identifies your opponent. Return 1 for ROCK, 
-2 for PAPER, or 3 for SCISSORS.
+`opponent_id` identifies your opponent. Return 1 for rock, 
+2 for paper, or 3 for scissors.
 
 You will also be called to observe all results, even for games you
 aren't playing in:
@@ -48,7 +48,7 @@ To play a round robin tournament of 100 games each to 1000:
     
     $ python roshambozo.py tourney 100 1000 p_robot p_random p_rock 
 
-To time your robot (to make sure it's not too slow, compared to p\_rock):
+To time your robot (to make sure it's not too slow, compared to `p_rock`):
 
     $ python roshambozo.py time p_robot
 

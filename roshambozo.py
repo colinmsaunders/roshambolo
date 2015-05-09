@@ -119,10 +119,37 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
             observe_play(i, player1[0], player2[0], a_play, b_play, 
                          a_won, wins[0], wins[1], catch_exceptions)
         if wins[0] == race_to:
+            logging.debug('G_RESULT\t%s beat %s' % (player1[3], player2[3]))
             return 0
         if wins[1] == race_to:
+            logging.debug('G_RESULT\t%s beat %s' % (player2[3], player1[3]))
             return 1
 
+
+def play_tourney(t, n, players):
+    scores = {}
+    for i in players:
+        scores[i[0]] = [i, 0]
+    for r in range(t):
+        random.shuffle(players)
+        for i in range(len(players)):
+            for j in range(len(players)):
+                if i >= j:
+                    continue
+                x = play_game(n, players[i], players[j], players, True)
+                if 0 == x:
+                    scores[players[i][0]][1] += 1
+                else:
+                    scores[players[j][0]][1] += 1
+                logging.info('TOURNEY\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' % (
+                             r, t, i, j, scores[players[i][0]][1], scores[players[j][0]][1], 
+                             players[i][3], players[j][3]))
+        k = scores.keys()
+        k.sort(key = lambda x : scores[x][1],reverse = True)
+        for i in k:
+            logging.info('SCORE\t%d\t%d\t%s' % (r, scores[i][1], scores[i][0][3]))
+    logging.info('T_RESULT\t%s wins the tournament' % scores[k[0]][0][3])
+    
 
 def make_player(player_id, playername, catch_exceptions):
     fp = pathname = description = m = None
@@ -154,29 +181,6 @@ def make_player(player_id, playername, catch_exceptions):
         f_observe = getattr(m, 'observe')
     return (player_id, f_play, f_observe, playername)
 
-
-def play_tourney(t, n, players):
-    scores = {}
-    for i in players:
-        scores[i[0]] = [i, 0]
-    for r in range(t):
-        random.shuffle(players)
-        for i in range(len(players)):
-            for j in range(len(players)):
-                if i >= j:
-                    continue
-                x = play_game(n, players[i], players[j], players, True)
-                if 0 == x:
-                    scores[players[i][0]][1] += 1
-                else:
-                    scores[players[j][0]][1] += 1
-                logging.info('TOURNEY\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' % (
-                             r, t, i, j, scores[players[i][0]][1], scores[players[j][0]][1], 
-                             players[i][3], players[j][3]))
-        k = scores.keys()
-        k.sort(key = lambda x : scores[x][1],reverse = True)
-        for i in k:
-            logging.info('SCORE\t%d\t%d\t%s' % (r, scores[i][1], scores[i][0][3]))
 
 
 if __name__ == '__main__':
