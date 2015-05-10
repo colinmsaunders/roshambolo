@@ -40,7 +40,7 @@ To get a copy of the game:
 
 To play a race to 3, human against computer:
 
-    $ python roshambozo.py game 3 p_human p_bozo
+    $ python roshambozo.py humam 3 p_bozo
 
 To play first to 100 rock against random:
 
