@@ -90,11 +90,11 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
                 if 0 == x:
                     ties += 1
                     winner = random.randint(0, 1)
-                elif 0 > x:
+                elif 0 < x:
                     winner = 0
                 else:
                     winner = 1
-            elif 0 > x:
+            elif 0 < x:
                 winner = 0
             else:
                 winner = 1

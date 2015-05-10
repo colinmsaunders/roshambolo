@@ -3,6 +3,9 @@
 # Dumb bot with memory. Remembers what everyone plays 
 # and tries to beat their most commonly played shape.
 
+import random
+
+
 ROCK = 1
 PAPER = 2
 SCISSORS = 3
@@ -40,7 +43,7 @@ def play(my_id, opponent_id):
     
     # if we get here, then it's a tie, just play ROCK
     #
-    return ROCK
+    return random.choice((ROCK, PAPER, SCISSORS))
 
 
 def observe(my_id, his_id, her_id, his_play, her_play, result, his_score, her_score):
