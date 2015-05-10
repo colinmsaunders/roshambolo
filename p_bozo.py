@@ -41,7 +41,7 @@ def play(my_id, opponent_id):
     if (counts[SCISSORS] > counts[PAPER]) and (counts[SCISSORS] > counts[ROCK]):
         return ROCK
     
-    # if we get here, then it's a tie, just play ROCK
+    # if we get here, just play a random shape
     #
     return random.choice((ROCK, PAPER, SCISSORS))
 
