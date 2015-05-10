@@ -48,7 +48,6 @@ def play(my_id, opponent_id):
 
 def observe(my_id, his_id, her_id, his_play, her_play, 
             result, his_score, her_score):
-    print "result: %s" % result
     print("Player #%s played %s, player #%s played %s, player #%s won, "
           "the score is %d to %d." % (
               his_id, VERBOSE_PLAYS[his_play],
