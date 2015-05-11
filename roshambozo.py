@@ -5,7 +5,7 @@
 HELP = '''\
 usage:
 
-    To play a race to 10 between p_rock and p_random:
+    To play a race to 10 game between p_rock and p_random:
 
         $ python roshambozo.py game 10 p_rock p_random
 
@@ -57,13 +57,17 @@ def get_play(player, opponent, catch_exceptions):
                      % (sys.exc_info()[1], player[2]))
     if play < 1 or play > 3:
         play = random.randint(1, 3)
-    logging.debug('PLAY\t%d\t%d\t%d\t%s plays %s' % (player[0], opponent[0], play, player[3], VERBOSE_PLAYS[play]))
+    logging.debug('PLAY\t%d\t%d\t%d\t%s plays %s' %
+                  (player[0], opponent[0], play, player[3],
+                   VERBOSE_PLAYS[play]))
     return play
 
 
-def observe_play(player, his_id, her_id, his_play, her_play, result, his_score, her_score, catch_exceptions) :
+def observe_play(player, his_id, her_id, his_play, her_play, result,
+                 his_score, her_score, catch_exceptions):
     try:
-        player[2](player[0], his_id, her_id, his_play, her_play, result, his_score, her_score)
+        player[2](player[0], his_id, her_id, his_play, her_play, result,
+                  his_score, her_score)
     except KeyboardInterrupt:
         raise
     except:
@@ -109,14 +113,14 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
         else:
             wins[1] += 1
         logging.debug('GAME\t%d\t%d\t%d\t%d\t%d\t%s\t%s'
-                      % (wins[0], wins[1], 
-                          a_play, b_play, winner, 
-                          [player1[3], player2[3]][winner], 
+                      % (wins[0], wins[1],
+                          a_play, b_play, winner,
+                          [player1[3], player2[3]][winner],
                           [player1[3], player2[3]][1 - winner]))
         for i in observers:
             if None == i[2]:
                 continue
-            observe_play(i, player1[0], player2[0], a_play, b_play, 
+            observe_play(i, player1[0], player2[0], a_play, b_play,
                          winner, wins[0], wins[1], catch_exceptions)
         if wins[0] == race_to:
             logging.debug('G_RESULT\t%s beat %s' % (player1[3], player2[3]))
@@ -142,14 +146,16 @@ def play_tourney(t, n, players):
                 else:
                     scores[players[j][0]][1] += 1
                 logging.info('TOURNEY\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' % (
-                             r, t, i, j, scores[players[i][0]][1], scores[players[j][0]][1], 
+                             r, t, i, j, scores[players[i][0]][1],
+                             scores[players[j][0]][1],
                              players[i][3], players[j][3]))
         k = scores.keys()
-        k.sort(key = lambda x : scores[x][1],reverse = True)
+        k.sort(key=lambda x: scores[x][1], reverse=True)
         for i in k:
-            logging.info('SCORE\t%d\t%d\t%s' % (r, scores[i][1], scores[i][0][3]))
+            logging.info('SCORE\t%d\t%d\t%s' %
+                         (r, scores[i][1], scores[i][0][3]))
     logging.info('T_RESULT\t%s wins the tournament' % scores[k[0]][0][3])
-    
+
 
 def make_player(player_id, playername, catch_exceptions):
     fp = pathname = description = m = None
@@ -158,7 +164,7 @@ def make_player(player_id, playername, catch_exceptions):
     except:
         if not catch_exceptions:
             raise
-        logging.warn('caught exception "%s" finding module %s' 
+        logging.warn('caught exception "%s" finding module %s'
                      % (sys.exc_info()[1], playername))
     try:
         if fp:
@@ -166,7 +172,7 @@ def make_player(player_id, playername, catch_exceptions):
     except:
         if not catch_exceptions:
             raise
-        logging.warn('caught exception "%s" importing %s' 
+        logging.warn('caught exception "%s" importing %s'
                      % (sys.exc_info()[1], playername))
     finally:
         if fp:
@@ -180,7 +186,6 @@ def make_player(player_id, playername, catch_exceptions):
     if hasattr(m, 'observe'):
         f_observe = getattr(m, 'observe')
     return (player_id, f_play, f_observe, playername)
-
 
 
 if __name__ == '__main__':
@@ -199,7 +204,8 @@ if __name__ == '__main__':
         sys.exit()
 
     elif 'game' == c:
-        logging.basicConfig(level=logging.DEBUG, format='%(message)s', stream=sys.stdout)
+        logging.basicConfig(level=logging.DEBUG, format='%(message)s',
+                            stream=sys.stdout)
         n = int(sys.argv[2])
         playernames = sys.argv[3:5]
         random.shuffle(playernames)
@@ -216,8 +222,8 @@ if __name__ == '__main__':
         sys.exit()
 
     elif 'tourney' == c:
-        logging.basicConfig(level=logging.INFO, 
-                format='%(message)s', stream=sys.stdout)
+        logging.basicConfig(level=logging.INFO,
+                            format='%(message)s', stream=sys.stdout)
         t = int(sys.argv[2])
         n = int(sys.argv[3])
         playernames = sys.argv[4:]
@@ -238,14 +244,17 @@ if __name__ == '__main__':
             play_game(1000, p_rock, p_random, (p_rock, p_random), False)
         rock_time = time.time() - start
         print('p_rock elapsed: %f seconds' % rock_time)
-        print('playing 100 games to 1000 between random and %s ...' % p_player[3])
+        print('playing 100 games to 1000 between random and %s ...' %
+              p_player[3])
         for i in range(100):
-            play_game(1000, p_random, p_player, (p_random, p_player), False)
+            play_game(1000, p_random, p_player, (p_random, p_player),
+                      False)
         player_time = time.time() - start
         print('%s elapsed: %f seconds' % (p_player[3], player_time))
-        print('%s is %.1fx slower than p_rock' % (p_player[3], player_time / rock_time))
+        print('%s is %.1fx slower than p_rock' %
+              (p_player[3], player_time / rock_time))
         sys.exit()
-    
+
     else:
         logging.error('i don\'t know how to "%s". look at the source' % c)
         print(HELP)
