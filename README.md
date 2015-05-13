@@ -24,8 +24,8 @@ You write a robot by implementing the `play()` function in
 `opponent_id` identifies your opponent. Return 1 for rock,
 2 for paper, or 3 for scissors.
 
-You will also be called to observe all results, even for games you
-aren't playing in:
+You will also be called to observe all results, even for games in
+which you are not a participant:
 
     def observe(my_id, a_id, b_id, a_play, b_play,
                 result, a_score, b_score)
