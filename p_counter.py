@@ -1,6 +1,6 @@
-# p_counter.py 
+# p_counter.py
 
-# Dumb bot with memory. Keeps a single counter, increments 
+# Dumb bot with memory. Keeps a single counter, increments
 # everytime he sees rock, decrements everytime he sees paper.
 # Plays scissors if positive, paper if negative, rock if zero.
 
@@ -27,7 +27,6 @@ def play(my_id, opponent_id):
 
 def observe(my_id, a_id, b_id, a_play, b_play, result, a_score, b_score):
     global counter
-
     if ROCK == a_play:
         counter += 1
     if PAPER == a_play:
