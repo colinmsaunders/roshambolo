@@ -46,6 +46,7 @@ VERBOSE_PLAYS = {
 
 def get_play(player, opponent, catch_exceptions):
     play = 0
+    start = time.clock()
     try:
         play = int(player[1](player[0], opponent[0]))
     except KeyboardInterrupt:
@@ -55,11 +56,14 @@ def get_play(player, opponent, catch_exceptions):
             raise
         logging.warn('caught exception "%s" calling %s \'s play() function'
                      % (sys.exc_info()[1], player[2]))
+    elapsed = time.clock() - start
+    player[4] += 1
+    player[5] += elapsed
     if play < 1 or play > 3:
         play = random.randint(1, 3)
-    logging.debug('PLAY\t%d\t%d\t%d\t%s plays %s' %
-                  (player[0], opponent[0], play, player[3],
-                   VERBOSE_PLAYS[play]))
+#    logging.debug('PLAY\t%d\t%d\t%d\t%s plays %s' %
+#                  (player[0], opponent[0], play, player[3],
+#                  VERBOSE_PLAYS[play]))
     return play
 
 
@@ -112,11 +116,11 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
             wins[0] += 1
         else:
             wins[1] += 1
-        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d\t%s\t%s'
-                      % (wins[0], wins[1],
-                          a_play, b_play, winner,
-                          [player1[3], player2[3]][winner],
-                          [player1[3], player2[3]][1 - winner]))
+#        logging.debug('GAME\t%d\t%d\t%d\t%d\t%d\t%s\t%s'
+#                      % (wins[0], wins[1],
+#                         a_play, b_play, winner,
+#                         [player1[3], player2[3]][winner],
+#                         [player1[3], player2[3]][1 - winner]))
         for i in observers:
             if None == i[2]:
                 continue
@@ -185,7 +189,7 @@ def make_player(player_id, playername, catch_exceptions):
     f_observe = None
     if hasattr(m, 'observe'):
         f_observe = getattr(m, 'observe')
-    return (player_id, f_play, f_observe, playername)
+    return [player_id, f_play, f_observe, playername, 0, 0.0]
 
 
 if __name__ == '__main__':
@@ -235,24 +239,16 @@ if __name__ == '__main__':
         sys.exit()
 
     elif 'time' == c:
-        p_random = make_player(1, 'p_random', False)
-        p_rock = make_player(2, 'p_rock', False)
-        p_player = make_player(3, sys.argv[2], False)
-        start = time.time()
-        print('playing 100 games to 1000 between random and rock ...')
-        for i in range(100):
-            play_game(1000, p_rock, p_random, (p_rock, p_random), False)
-        rock_time = time.time() - start
-        print('p_rock elapsed: %f seconds' % rock_time)
-        print('playing 100 games to 1000 between random and %s ...' %
-              p_player[3])
-        for i in range(100):
-            play_game(1000, p_random, p_player, (p_random, p_player),
-                      False)
-        player_time = time.time() - start
-        print('%s elapsed: %f seconds' % (p_player[3], player_time))
-        print('%s is %.1fx slower than p_rock' %
-              (p_player[3], player_time / rock_time))
+        p1 = make_player(1, 'p_random', False)
+        p2 = make_player(2, 'p_random', False)
+        p3 = make_player(3, 'p_rock', False)
+        p4 = make_player(4, sys.argv[2], False)
+        print('playing 100 games to 1000 between random and rock and random ...')
+        play_tourney(100, 1000, [p1, p3, p2])
+        print('playing 100 games to 1000 between random and rock and %s ...' % p4[3])
+        play_tourney(100, 1000, [p1, p3, p4])
+        print('p_random clock time: %f, %s clock time: %f' % (p2[5], p4[3], p4[5]))
+        print('%s is %.1fx slower than p_random' % (p4[3], p4[5] / p2[5]))
         sys.exit()
 
     else:
