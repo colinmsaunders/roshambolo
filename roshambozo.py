@@ -44,11 +44,11 @@ VERBOSE_PLAYS = {
 }
 
 
-def get_play(player, opponent, catch_exceptions):
+def get_play(game_id, player, opponent, catch_exceptions):
     play = 0
     start = time.clock()
     try:
-        play = int(player[1](player[0], opponent[0]))
+        play = int(player[1](game_id, player[0], opponent[0]))
     except KeyboardInterrupt:
         raise
     except:
@@ -67,11 +67,10 @@ def get_play(player, opponent, catch_exceptions):
     return play
 
 
-def observe_play(player, his_id, her_id, his_play, her_play, result,
-                 his_score, her_score, catch_exceptions):
+def observe_play(player, game_id, his_id, her_id, his_play, her_play,
+                 result, catch_exceptions):
     try:
-        player[2](player[0], his_id, her_id, his_play, her_play, result,
-                  his_score, her_score)
+        player[2](game_id, his_id, her_id, his_play, her_play, result)
     except KeyboardInterrupt:
         raise
     except:
@@ -82,12 +81,12 @@ def observe_play(player, his_id, her_id, his_play, her_play, result,
     return
 
 
-def play_game(race_to, player1, player2, observers, catch_exceptions):
+def play_game(game_id, race_to, player1, player2, observers, catch_exceptions):
     wins = [0, 0]
     plays = [[-1, 0, 0, 0], [-1, 0, 0, 0]]
     while 1:
-        a_play = get_play(player1, player2, catch_exceptions)
-        b_play = get_play(player2, player1, catch_exceptions)
+        a_play = get_play(game_id, player1, player2, catch_exceptions)
+        b_play = get_play(game_id, player2, player1, catch_exceptions)
         ties = 0
         if a_play == b_play:
             ties += 1
@@ -124,8 +123,8 @@ def play_game(race_to, player1, player2, observers, catch_exceptions):
         for i in observers:
             if None == i[2]:
                 continue
-            observe_play(i, player1[0], player2[0], a_play, b_play,
-                         winner, wins[0], wins[1], catch_exceptions)
+            observe_play(i, game_id, player1[0], player2[0],
+                         a_play, b_play, winner, catch_exceptions)
         if wins[0] == race_to:
             logging.debug('G_RESULT\t%s beat %s' % (player1[3], player2[3]))
             return 0
@@ -138,19 +137,21 @@ def play_tourney(t, n, players):
     scores = {}
     for i in players:
         scores[i[0]] = [i, 0]
+    game_id = 0
     for r in range(t):
         random.shuffle(players)
         for i in range(len(players)):
             for j in range(len(players)):
                 if i >= j:
                     continue
-                x = play_game(n, players[i], players[j], players, True)
+                game_id += 1
+                x = play_game(game_id, n, players[i], players[j], players, True)
                 if 0 == x:
                     scores[players[i][0]][1] += 1
                 else:
                     scores[players[j][0]][1] += 1
                 logging.info('TOURNEY\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s' % (
-                             r, t, i, j, scores[players[i][0]][1],
+                             game_id, t, i, j, scores[players[i][0]][1],
                              scores[players[j][0]][1],
                              players[i][3], players[j][3]))
         k = scores.keys()
@@ -215,14 +216,14 @@ if __name__ == '__main__':
         random.shuffle(playernames)
         player1 = make_player(1, playernames[0], False)
         player2 = make_player(2, playernames[1], False)
-        x = play_game(n, player1, player2, (player1, player2), False)
+        x = play_game(0, n, player1, player2, (player1, player2), False)
         sys.exit()
 
     elif 'human' == c:
         n = int(sys.argv[2])
         player1 = make_player(1, 'p_human', False)
         player2 = make_player(2, sys.argv[3], False)
-        x = play_game(n, player1, player2, (player1, player2), False)
+        x = play_game(0, n, player1, player2, (player1, player2), False)
         sys.exit()
 
     elif 'tourney' == c:

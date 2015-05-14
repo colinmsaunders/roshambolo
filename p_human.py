@@ -13,7 +13,7 @@ VERBOSE_PLAYS = {
 }
 
 
-def play(my_id, opponent_id):
+def play(game_id, my_id, opponent_id):
 
     # tell the user what's going on
     #
@@ -47,13 +47,10 @@ def play(my_id, opponent_id):
     return play
 
 
-def observe(my_id, a_id, b_id, a_play, b_play, 
-            result, a_score, b_score):
-    print("Player #%s played %s, player #%s played %s, player #%s won, "
-          "the score is %d to %d." % (
+def observe(game_id, a_id, b_id, a_play, b_play, result):
+    print("Player #%s played %s, player #%s played %s, player #%s won." % (
               a_id, VERBOSE_PLAYS[a_play],
               b_id, VERBOSE_PLAYS[b_play],
-              [a_id, b_id][result], 
-              a_score, b_score))
+              [a_id, b_id][result]))
 
 

@@ -14,21 +14,19 @@ For example, if both players play "Rock", then the player who
 has played "Rock" more often wins. If both players have played
 "Rock" the same amount of times, she who played "Paper" more wins.
 
-You write a robot by implementing the `play()` function in
-`p_robot.py`:
+You write a robot by implementing the `play()` function:
 
-    def play(my_id, opponent_id):
+    def play(game_id, my_id, opponent_id):
         pass
 
-`my_id` is a unique identifier for your player,
-`opponent_id` identifies your opponent. Return 1 for rock,
-2 for paper, or 3 for scissors.
+`game_id` identifies the game, `my_id` is a unique identifier for
+your player, `opponent_id` identifies your opponent. Return 1 for
+rock, 2 for paper, or 3 for scissors.
 
 You will also be called to observe all results, even for games in
 which you are not a participant:
 
-    def observe(my_id, a_id, b_id, a_play, b_play,
-                result, a_score, b_score)
+    def observe(game_id, a_id, b_id, a_play, b_play, result):
         pass
 
 `result` is 0 if "a" won the last game, 1 if "b" won.

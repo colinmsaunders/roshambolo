@@ -16,16 +16,18 @@ SCISSORS = 3
 counter = 0
 
 
-def play(my_id, opponent_id):
+def play(game_id, my_id, opponent_id):
     global counter
     if counter < 0:
-        return SCISSORS
-    if counter > 0:
-        return PAPER
-    return ROCK
+        play = SCISSORS
+    elif counter > 0:
+        play = PAPER
+    else:
+        play = ROCK
+    return play
 
 
-def observe(my_id, a_id, b_id, a_play, b_play, result, a_score, b_score):
+def observe(game_id, a_id, b_id, a_play, b_play, result):
     global counter
     if ROCK == a_play:
         counter += 1
