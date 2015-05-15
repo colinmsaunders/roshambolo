@@ -1,22 +1,22 @@
 #!/usr/bin/python
 
-# roshambozo.py -- console harness
+# roshambolo.py -- console harness
 
 HELP = '''\
 usage:
 
     To play a race to 10 game between p_rock and p_random:
 
-        $ python roshambozo.py game 10 p_rock p_random
+        $ python roshambolo.py game 10 p_rock p_random
 
     To play a round robin tourney of best of 100 races to 10000
     between p_rock and p_robot and p_random:
 
-        $ python roshambozo.py tourney 100 10000 p_rock p_robot p_random
+        $ python roshambolo.py tourney 100 10000 p_rock p_robot p_random
 
     To time your bot to make sure it's not too slow:
 
-        $ python roshambozo.py time p_robot
+        $ python roshambolo.py time p_robot
 '''
 
 import sys

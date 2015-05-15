@@ -1,4 +1,4 @@
-# p_random.py -- sample roshambozo robot
+# p_random.py -- sample roshambolo robot
 
 import random
 

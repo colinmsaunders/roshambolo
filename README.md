@@ -1,7 +1,7 @@
-Roshambozo
+Roshambolo
 ==========
 
-Roshambozo is roshambo (or Rock-Paper-Scissors) with no ties.
+Roshambolo is roshambo (or Rock-Paper-Scissors) with no ties.
 
 Rock beats scissors, scissors beats paper, paper beats rock.
 
@@ -33,25 +33,26 @@ which you are not a participant:
 
 To get a copy of the game:
 
-    $ git clone https://github.com/colinmsaunders/roshambozo.git
-    $ cd roshambozo
+    $ git clone https://github.com/colinmsaunders/roshambolo.git
+    $ cd roshambolo
 
 To play a race to 3, human against computer:
 
-    $ python roshambozo.py humam 3 p_random
+    $ python roshambolo.py humam 3 p_random
 
 To play first to 100 rock against random:
 
-    $ python roshambozo.py game 100 p_rock p_random
+    $ python roshambolo.py game 100 p_rock p_random
 
-Next, copy `p_random.py` to `p_mybot.py`, implement `play()` and
+Next, copy `p_random.py` to `p_bot.py`, implement `play()` and
 optionally `observe()`, then play your bot against random:
 
-    $ python roshambozo.py game 100 p_mybot p_random
+    $ cp p_random.py p_bot.py
+    $ python roshambolo.py game 100 p_bot p_random
 
 To play a round robin tournament of 100 games each to 1000:
 
-    $ python roshambozo.py tourney 100 1000 p_mybot p_random p_rock
+    $ python roshambolo.py tourney 100 1000 p_bot p_random p_rock
 
 The winner of the tournament is the player who wins the most games,
 in total. Note that `player_id` is consistent across games, but shape
@@ -59,7 +60,7 @@ counts are reset between each game.
 
 To time your robot (to make sure it's not too slow, compared to `p_rock`):
 
-    $ python roshambozo.py time p_mybot
+    $ python roshambolo.py time p_bot
 
 Have fun!
 
