@@ -156,6 +156,7 @@ def play_tourney(t, n, players):
                              players[i][3], players[j][3]))
         k = scores.keys()
         k.sort(key=lambda x: scores[x][1], reverse=True)
+        logging.info('SCORE\t%d' % r)
         for i in k:
             logging.info('SCORE\t%d\t%d\t%s' %
                          (r, scores[i][1], scores[i][0][3]))

@@ -38,7 +38,7 @@ To get a copy of the game:
 
 To play a race to 3, human against computer:
 
-    $ python roshambolo.py humam 3 p_random
+    $ python roshambolo.py human 3 p_random
 
 To play first to 100 rock against random:
 

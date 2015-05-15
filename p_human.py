@@ -12,6 +12,8 @@ VERBOSE_PLAYS = {
     3:  'SCISSORS'
 }
 
+score = [0, 0]
+last_game_id = None
 
 def play(game_id, my_id, opponent_id):
 
@@ -48,9 +50,14 @@ def play(game_id, my_id, opponent_id):
 
 
 def observe(game_id, a_id, b_id, a_play, b_play, result):
-    print("Player #%s played %s, player #%s played %s, player #%s won." % (
+    global score, last_game_id
+    if game_id != last_game_id:
+        score = [0, 0]
+        last_game_id = game_id
+    score[result] += 1
+    print("Player #%s played %s, player #%s played %s, player #%s won the point." % (
               a_id, VERBOSE_PLAYS[a_play],
               b_id, VERBOSE_PLAYS[b_play],
               [a_id, b_id][result]))
-
+    print("The score is %d to %d." % (score[0], score[1]))
 
