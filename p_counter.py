@@ -4,9 +4,6 @@
 # everytime he sees rock, decrements everytime he sees paper.
 # Plays scissors if positive, paper if negative, rock if zero.
 
-import random
-
-
 ROCK = 1
 PAPER = 2
 SCISSORS = 3
